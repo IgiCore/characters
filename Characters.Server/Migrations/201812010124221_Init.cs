@@ -1,6 +1,6 @@
 namespace IgiCore.Characters.Server.Migrations
 {
-	using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations;
     
     public partial class Init : DbMigration
     {
@@ -11,29 +11,34 @@ namespace IgiCore.Characters.Server.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Forename = c.String(maxLength: 1000, unicode: false),
-                        Middlename = c.String(maxLength: 1000, unicode: false),
-                        Surname = c.String(maxLength: 1000, unicode: false),
+                        Forename = c.String(nullable: false, maxLength: 100, unicode: false),
+                        Middlename = c.String(maxLength: 100, unicode: false),
+                        Surname = c.String(nullable: false, maxLength: 100, unicode: false),
                         DateOfBirth = c.DateTime(nullable: false, precision: 0),
                         Gender = c.Short(nullable: false),
                         Alive = c.Boolean(nullable: false, storeType: "bit"),
                         Health = c.Int(nullable: false),
                         Armor = c.Int(nullable: false),
-                        Ssn = c.String(maxLength: 1000, unicode: false),
-                        PosX = c.Single(nullable: false),
-                        PosY = c.Single(nullable: false),
-                        PosZ = c.Single(nullable: false),
-                        Model = c.String(maxLength: 1000, unicode: false),
-                        WalkingStyle = c.String(maxLength: 1000, unicode: false),
+                        Ssn = c.Int(nullable: false),
+                        Position_X = c.Single(nullable: false),
+                        Position_Y = c.Single(nullable: false),
+                        Position_Z = c.Single(nullable: false),
+                        Model = c.String(nullable: false, maxLength: 200, unicode: false),
+                        WalkingStyle = c.String(nullable: false, maxLength: 200, unicode: false),
                         LastPlayed = c.DateTime(precision: 0),
+                        UserId = c.Guid(nullable: false),
                         Created = c.DateTime(nullable: false, precision: 0),
                         Deleted = c.DateTime(precision: 0),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Characters", "UserId", "dbo.Users");
+            DropIndex("dbo.Characters", new[] { "UserId" });
             DropTable("dbo.Characters");
         }
     }

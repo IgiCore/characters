@@ -83,7 +83,7 @@ namespace IgiCore.Characters.Client
 				Surname = "Smith",
 				DateOfBirth = new DateTime(1990, 1, 1),
 				Gender = 0,
-				WalkingStyle = "", // TODO
+				WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK",
 				Model = ((uint)PedHash.FreemodeMale01).ToString()
 			});
 
@@ -91,6 +91,7 @@ namespace IgiCore.Characters.Client
 			Game.Player.Character.Position = character.Position.ToVector3();
 			Game.Player.Character.Health = character.Health;
 			Game.Player.Character.Armor = character.Armor;
+			Game.Player.Character.MovementAnimationSet = character.Forename;
 
 			// Load character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await this.Delay(10);

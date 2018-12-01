@@ -17,33 +17,48 @@ namespace IgiCore.Characters.Server
 	{
 		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, Configuration configuration) : base(logger, events, rpc, configuration)
 		{
-			this.Rpc.Event(CharacterEvents.Create).On<Character>(async (e, character) =>
+			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
+		}
+
+		public async void Create(IRpcEvent e, Character character)
+		{
+			// TODO: Validate client sent values
+
+			// Don't trust important values from clients
+			character.Id = GuidGenerator.GenerateTimeBasedGuid();
+			character.UserId = e.User.Id;
+			character.Alive = true;
+			character.Health = 10000;
+			character.Armor = 0;
+			character.Ssn = 10000000;
+			character.LastPlayed = DateTime.UtcNow;
+			character.Position = new Position(0f, 0f, 71f);
+
+			// Save character
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
 			{
-				// TODO: Validate client sent values
-
-				// Don't trust important values from clients
-				character.Id = GuidGenerator.GenerateTimeBasedGuid();
-				character.UserId = e.User.Id;
-				character.Alive = true;
-				character.Health = 10000;
-				character.Armor = 0;
-				character.Ssn = 10000000;
-				character.LastPlayed = DateTime.UtcNow;
-				character.Position = new Position(0f, 0f, 71f);
-
-				using (var context = new StorageContext())
+				try
 				{
-					// Save character
 					context.Characters.Add(character);
 
 					await context.SaveChangesAsync();
+					transaction.Commit();
+
+					this.Logger.Debug($"Saved new character: {character.FullName}");
+
+					// Send back updated user
+					e.Reply(character);
 				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex);
 
-				this.Logger.Debug($"Saved new character: {character.FullName}");
+					transaction.Rollback();
 
-				// Send back updated user
-				e.Reply(character);
-			});
+					// TODO: Reply with an error so client doesn't hang
+				}
+			}
 		}
 	}
 }
