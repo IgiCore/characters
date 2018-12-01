@@ -1,0 +1,15 @@
+name: IgiCore/characters
+version: 1.0.0
+description: NFive Plugin
+author: IgiCore
+license: LGPL
+server:
+  main:
+    - IgiCore.Characters.Server
+  include:
+    - IgiCore.Characters.Shared
+client:
+  main:
+    - IgiCore.Characters.Client
+  include:
+    - IgiCore.Characters.Shared
