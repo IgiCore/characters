@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NFive.SDK.Core.Models;
 
 namespace IgiCore.Characters.Shared.Models
 {
@@ -17,10 +14,8 @@ namespace IgiCore.Characters.Shared.Models
 		bool Alive { get; set; }
 		int Health { get; set; }
 		int Armor { get; set; }
-		string Ssn { get; set; }
-		float PosX { get; set; }
-		float PosY { get; set; }
-		float PosZ { get; set; }
+		int Ssn { get; set; }
+		Position Position { get; set; }
 		string Model { get; set; }
 		string WalkingStyle { get; set; }
 		DateTime? LastPlayed { get; set; }

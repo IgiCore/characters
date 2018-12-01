@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("IgiCore characters")]
+[assembly: AssemblyTitle("IgiCore Characters")]
 [assembly: AssemblyDescription("NFive Plugin")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IgiCore")]
-[assembly: AssemblyProduct("IgiCore characters Shared Library")]
+[assembly: AssemblyProduct("IgiCore Characters Shared Library")]
 [assembly: AssemblyCopyright("Copyright © IgiCore 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:700"> 
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+		<style type="text/css">
+			html, body {
+				width: 100vw;
+				height: 100vh;
+				margin: 0;
+				overflow: hidden;
+				font-size: 10vh;
+				font-family: 'PT Sans', sans-serif;
+				user-select: none;
+				outline: none;
+				background-color: transparent;
+			}
+		</style>
+
+		<script>
+			$(() => {
+				nfive.show();
+
+				$('button').on('click', () => {
+					nfive.send('create');
+				});
+			});
+		</script>
+	</head>
+
+	<body class="d-flex">
+		<main class="justify-content-center align-self-center mx-auto">
+			<button type="button" class="btn btn-xl btn-light shadow-none" autofocus>Create Character</button>
+		</main>
+	</body>
+</html>

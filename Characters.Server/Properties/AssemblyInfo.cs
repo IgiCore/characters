@@ -4,11 +4,11 @@ using NFive.SDK.Server;
 
 [assembly: ServerPlugin]
 
-[assembly: AssemblyTitle("IgiCore characters")]
+[assembly: AssemblyTitle("IgiCore Characters")]
 [assembly: AssemblyDescription("NFive Plugin")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IgiCore")]
-[assembly: AssemblyProduct("IgiCore characters Server Plugin")]
+[assembly: AssemblyProduct("IgiCore Characters Server Plugin")]
 [assembly: AssemblyCopyright("Copyright © IgiCore 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

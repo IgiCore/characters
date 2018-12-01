@@ -1,7 +1,6 @@
 namespace IgiCore.Characters.Server.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
+	using System.Data.Entity.Migrations;
     
     public partial class Init : DbMigration
     {
@@ -31,7 +30,6 @@ namespace IgiCore.Characters.Server.Migrations
                         Deleted = c.DateTime(precision: 0),
                     })
                 .PrimaryKey(t => t.Id);
-            
         }
         
         public override void Down()
