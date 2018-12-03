@@ -13,3 +13,5 @@ client:
     - IgiCore.Characters.Client
   include:
     - IgiCore.Characters.Shared
+  files:
+    - Overlays/CharacterOverlay.html
