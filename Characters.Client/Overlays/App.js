@@ -23,6 +23,8 @@ window.App = {
 			nfive.show()
 		});
 
+		nfive.send("load");
+
 		$(window).on('keypress', this.onKeypress);
 	},
 

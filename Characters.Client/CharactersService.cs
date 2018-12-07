@@ -53,19 +53,12 @@ namespace IgiCore.Characters.Client
 			Screen.Fading.FadeOut(0);
 			while (Screen.Fading.IsFadingOut) await this.Delay(10);
 
-			// Show overlay
-			var overlay = new CharacterOverlay(this.OverlayManager);
-			overlay.Create += OnCreate;
-
-			this.Logger.Debug($"Getting chars");
-
 			// Get characters
 			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
 
-			this.Logger.Debug($"Sending {characters.Count} characters to JS");
-
-			// Load characters into NUI
-			overlay.Load(characters);
+			// Show overlay
+			var overlay = new CharacterOverlay(characters, this.OverlayManager);
+			overlay.Create += OnCreate;
 
 			// Focus overlay
 			API.SetNuiFocus(true, true);

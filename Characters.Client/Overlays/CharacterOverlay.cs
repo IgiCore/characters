@@ -9,14 +9,10 @@ namespace IgiCore.Characters.Client.Overlays
 	{
 		public event EventHandler<OverlayEventArgs> Create;
 
-		public CharacterOverlay(OverlayManager manager) : base("CharacterOverlay.html", manager)
+		public CharacterOverlay(List<Character> characters, OverlayManager manager) : base("CharacterOverlay.html", manager)
 		{
 			this.Attach("create", (_, callback) => this.Create?.Invoke(this, new OverlayEventArgs(this)));
-		}
-
-		public void Load(List<Character> characters)
-		{
-			this.Send("load", characters.ToArray());
+			this.Attach("load", (_, callback) => this.Send("load", characters.ToArray()));
 		}
 	}
 }

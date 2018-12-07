@@ -1,4 +1,4 @@
-window.Character = Vue.component('Character', {
+window.Character = {
 	name: 'Character',
 
 	template: '#character-template',
@@ -17,4 +17,4 @@ window.Character = Vue.component('Character', {
 			$(this.$refs.deleteModal).modal('hide')
 		}
 	}
-});
+};
