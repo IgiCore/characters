@@ -65,5 +65,5 @@ new Vue({
 		}
 	}),
 
-	render: h => h(window.App)
+	render: h => h(window.CharacterSelect)
 });

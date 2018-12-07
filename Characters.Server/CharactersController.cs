@@ -9,7 +9,6 @@ using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rpc;
 using System;
-using System.Data.Entity;
 using System.Linq;
 
 namespace IgiCore.Characters.Server
@@ -22,14 +21,30 @@ namespace IgiCore.Characters.Server
 			this.Rpc.Event(CharacterEvents.Load).On(Load);
 
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
+
+			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
+		}
+
+		public async void Delete(IRpcEvent e, Guid id)
+		{
+			using (var context = new StorageContext())
+			{
+				var character = context.Characters.First(c => c.Id == id);
+
+				character.Deleted = DateTime.UtcNow;
+
+				await context.SaveChangesAsync();
+
+				Load(e);
+			}
 		}
 
 		public void Load(IRpcEvent e)
 		{
 			using (var context = new StorageContext())
 			{
-				var characters = context.Characters.Where(c => c.UserId == e.User.Id).ToList();
-				
+				var characters = context.Characters.Where(c => c.Deleted == null && c.UserId == e.User.Id).ToList();
+
 				e.Reply(characters);
 			}
 		}

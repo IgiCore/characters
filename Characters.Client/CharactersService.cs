@@ -14,13 +14,19 @@ using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using NFive.SDK.Core.Rpc;
 
 namespace IgiCore.Characters.Client
 {
 	[PublicAPI]
 	public class CharactersService : Service
 	{
+		private CharacterOverlay overlay;
+
 		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, overlay, user) { }
 
 		public override async Task Started()
@@ -57,8 +63,11 @@ namespace IgiCore.Characters.Client
 			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
 
 			// Show overlay
-			var overlay = new CharacterOverlay(characters, this.OverlayManager);
-			overlay.Create += OnCreate;
+			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
+			this.overlay.Create += OnCreate;
+			this.overlay.Disconnect += OnDisconnect;
+			this.overlay.Select += OnSelect;
+			this.overlay.Delete += OnDelete;
 
 			// Focus overlay
 			API.SetNuiFocus(true, true);
@@ -71,25 +80,49 @@ namespace IgiCore.Characters.Client
 			while (Screen.Fading.IsFadingIn) await this.Delay(10);
 		}
 
-		private async void OnCreate(object sender, OverlayEventArgs e)
+		private async void OnCreate(object sender, CreateOverlayEventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
+
+			e.Character.WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK";
+			e.Character.Model = ((uint)PedHash.FreemodeMale01).ToString();
+
+			// TODO: DOB
+
+			this.Logger.Debug(e.Character.DateOfBirth.ToString());
+
+			// Send new character
+			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
+
+			await Play(e.Overlay, character);
+		}
+
+		private async void OnDisconnect(object sender, OverlayEventArgs e)
+		{
+			// TODO: Disconnect client
+		}
+		
+		private async void OnSelect(object sender, IdOverlayEventArgs e)
+		{
+			await Play(e.Overlay, this.overlay.Characters.First(c => c.Id == e.Id));
+		}
+
+		private async void OnDelete(object sender, IdOverlayEventArgs e)
+		{
+			this.Logger.Debug($"Delete {e.Id}");
+
+			this.overlay.Characters = await this.Rpc.Event(CharacterEvents.Delete).Request<List<Character>>(e.Id);
+
+			this.overlay.SyncCharacters();
+		}
+
+		private async Task Play(Overlay o, Character character)
 		{
 			// Destroy overlay
-			e.Overlay.Dispose();
+			o.Dispose();
 
 			// Un-focus overlay
 			API.SetNuiFocus(false, false);
-
-			// Send new character
-			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(new Character
-			{
-				Forename = "John",
-				Middlename = "A",
-				Surname = "Smith",
-				DateOfBirth = new DateTime(1990, 1, 1),
-				Gender = 0,
-				WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK",
-				Model = ((uint)PedHash.FreemodeMale01).ToString()
-			});
 
 			// Set character properties 
 			Game.Player.Character.Position = character.Position.ToVector3();
