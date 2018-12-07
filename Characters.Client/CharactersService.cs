@@ -13,6 +13,7 @@ using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IgiCore.Characters.Client
@@ -56,6 +57,16 @@ namespace IgiCore.Characters.Client
 			var overlay = new CharacterOverlay(this.OverlayManager);
 			overlay.Create += OnCreate;
 
+			this.Logger.Debug($"Getting chars");
+
+			// Get characters
+			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
+
+			this.Logger.Debug($"Sending {characters.Count} characters to JS");
+
+			// Load characters into NUI
+			overlay.Load(characters);
+
 			// Focus overlay
 			API.SetNuiFocus(true, true);
 
@@ -91,7 +102,7 @@ namespace IgiCore.Characters.Client
 			Game.Player.Character.Position = character.Position.ToVector3();
 			Game.Player.Character.Health = character.Health;
 			Game.Player.Character.Armor = character.Armor;
-			Game.Player.Character.MovementAnimationSet = character.Forename;
+			Game.Player.Character.MovementAnimationSet = character.WalkingStyle;
 
 			// Load character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await this.Delay(10);

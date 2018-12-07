@@ -9,6 +9,8 @@ using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rpc;
 using System;
+using System.Data.Entity;
+using System.Linq;
 
 namespace IgiCore.Characters.Server
 {
@@ -17,7 +19,19 @@ namespace IgiCore.Characters.Server
 	{
 		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, Configuration configuration) : base(logger, events, rpc, configuration)
 		{
+			this.Rpc.Event(CharacterEvents.Load).On(Load);
+
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
+		}
+
+		public void Load(IRpcEvent e)
+		{
+			using (var context = new StorageContext())
+			{
+				var characters = context.Characters.Where(c => c.UserId == e.User.Id).ToList();
+				
+				e.Reply(characters);
+			}
 		}
 
 		public async void Create(IRpcEvent e, Character character)
