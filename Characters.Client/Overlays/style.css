@@ -1,0 +1,69 @@
+@font-face {
+	font-family: gravity;
+	src: url('./gravity.woff2');
+}
+
+@font-face {
+	font-family: pricedown;
+	src: url('./pricedown.woff2');
+}
+
+html,
+body {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	overflow: hidden;
+	font-size: 1.5vh;
+	user-select: none;
+	outline: none;
+	background-color: transparent;
+}
+
+body > main {
+	width: 80vw;
+	height: 90vh;
+	margin: 5vh auto;
+	overflow: hidden;
+}
+
+h1 {
+	margin-left: 0.15vh;
+	font-family: pricedown, sans-serif;
+	-webkit-text-stroke: 0.15vh #000;
+	color: #fff;
+	text-shadow:
+		0.4vh 0.4vh 0 #000,
+		-0.15vh -0.15vh 0 #000,
+		0.15vh -0.15vh 0 #000,
+		-0.15vh 0.15vh 0 #000,
+		0.15vh 0.15vh 0 #000;
+	letter-spacing: -0.3vh;
+}
+
+.component-fade-enter-active {
+	transition: all 0.5s ease;
+}
+
+.component-fade-leave-active {
+	transition: all 0.1s;
+}
+
+.component-fade-enter,
+.component-fade-leave-to {
+	opacity: 0;
+}
+
+::-webkit-scrollbar {
+	width: 1vw;
+	height: 1vw;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #000;
+	border-radius: 0.5rem;
+}
+
+.card {
+	width: 33vh;
+}
