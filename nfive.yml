@@ -5,20 +5,22 @@ author: IgiCore
 license: LGPL
 server:
   main:
-    - IgiCore.Characters.Server
+  - IgiCore.Characters.Server
   include:
-    - IgiCore.Characters.Shared
+  - IgiCore.Characters.Shared
 client:
   main:
-    - IgiCore.Characters.Client
+  - IgiCore.Characters.Client
   include:
-    - IgiCore.Characters.Shared
+  - IgiCore.Characters.Shared
   files:
-    - Overlays/CharacterOverlay.html
-    - Overlays/App.js
-    - Overlays/Character.js
-    - Overlays/CharacterSelect.js
-    - Overlays/gravity.woff2
-    - Overlays/main.js
-    - Overlays/pricedown.woff2
-    - Overlays/style.css
+  - Overlays/CharacterOverlay.html
+  - Overlays/App.js
+  - Overlays/Character.js
+  - Overlays/CharacterSelect.js
+  - Overlays/gravity.woff2
+  - Overlays/main.js
+  - Overlays/pricedown.woff2
+  - Overlays/style.css
+dependencies:
+  NFive/plugin-sessionmanager: '*'

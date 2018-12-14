@@ -1,9 +1,11 @@
-console.log(navigator.appVersion == '5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.0 Safari/537.36');
+/* global nfive, $, Vue, Vuex */
 
-Vue.config.productionTip = false;
-Vue.config.devtools = true;
+window.emulateServer = !navigator.appVersion.includes('66.0.3359.0') // HACK: Find a real way of detecting if running inside CEF
 
-Vue.use(Vuex);
+Vue.config.productionTip = false
+Vue.config.devtools = true
+
+Vue.use(Vuex)
 
 new Vue({
 	el: 'main',
@@ -55,7 +57,7 @@ new Vue({
 							character.GenderString = character.Gender == 0 ? 'Male' : 'Female'
 
 							const dob = new Date(character.DateOfBirth)
-							character.DateOfBirthFormatted = dob.getDate() + ' ' + dob.toLocaleString('en-US', {month: 'long'}) + ' ' + dob.getFullYear()
+							character.DateOfBirthFormatted = dob.getDate() + ' ' + dob.toLocaleString('en-US', { month: 'long' }) + ' ' + dob.getFullYear()
 
 							state.all.push(character)
 						}
@@ -66,4 +68,4 @@ new Vue({
 	}),
 
 	render: h => h(window.CharacterSelect)
-});
+})

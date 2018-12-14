@@ -14,7 +14,7 @@ window.CharacterSelect = {
 				middlename: '',
 				surname: '',
 				gender: 0,
-				dob: '1999-01-01'
+				dateofbirth: '1999-01-01'
 			}
 		}
 	},
@@ -30,9 +30,9 @@ window.CharacterSelect = {
 			await this.$store.dispatch('setCharacters', characters)
 
 			nfive.show()
-		});
+		})
 
-		nfive.send("load")
+		nfive.send('load')
 	},
 
 	beforeDestroy() {
