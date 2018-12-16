@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using NFive.SDK.Core.Rpc;
+using NFive.SessionManager.Shared;
 
 namespace IgiCore.Characters.Client
 {
@@ -97,11 +98,11 @@ namespace IgiCore.Characters.Client
 			await Play(e.Overlay, character);
 		}
 
-		private async void OnDisconnect(object sender, OverlayEventArgs e)
+		private void OnDisconnect(object sender, OverlayEventArgs e)
 		{
-			// TODO: Disconnect client
+			this.Rpc.Event(SessionEvents.DisconnectPlayer).Trigger("Thanks for playing");
 		}
-		
+
 		private async void OnSelect(object sender, IdOverlayEventArgs e)
 		{
 			await Play(e.Overlay, this.overlay.Characters.First(c => c.Id == e.Id));
@@ -124,7 +125,7 @@ namespace IgiCore.Characters.Client
 			// Un-focus overlay
 			API.SetNuiFocus(false, false);
 
-			// Set character properties 
+			// Set character properties
 			Game.Player.Character.Position = character.Position.ToVector3();
 			Game.Player.Character.Health = character.Health;
 			Game.Player.Character.Armor = character.Armor;
