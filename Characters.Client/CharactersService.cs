@@ -12,13 +12,9 @@ using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using NFive.SDK.Core.Rpc;
 using NFive.SessionManager.Shared;
 
 namespace IgiCore.Characters.Client
@@ -51,14 +47,14 @@ namespace IgiCore.Characters.Client
 			API.SetCloudHatOpacity(0.01f);
 
 			// Wait for switch
-			while (API.GetPlayerSwitchState() != 5) await this.Delay(10);
+			while (API.GetPlayerSwitchState() != 5) await Delay(10);
 
 			// Hide loading screen
 			API.ShutdownLoadingScreen();
 
 			// Fade out
 			Screen.Fading.FadeOut(0);
-			while (Screen.Fading.IsFadingOut) await this.Delay(10);
+			while (Screen.Fading.IsFadingOut) await Delay(10);
 
 			// Get characters
 			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
@@ -78,7 +74,7 @@ namespace IgiCore.Characters.Client
 
 			// Fade in
 			Screen.Fading.FadeIn(500);
-			while (Screen.Fading.IsFadingIn) await this.Delay(10);
+			while (Screen.Fading.IsFadingIn) await Delay(10);
 		}
 
 		private async void OnCreate(object sender, CreateOverlayEventArgs e)
@@ -132,7 +128,7 @@ namespace IgiCore.Characters.Client
 			Game.Player.Character.MovementAnimationSet = character.WalkingStyle;
 
 			// Load character model
-			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await this.Delay(10);
+			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
 			Game.Player.Character.Style.SetDefaultClothes();
 
 			// Unfreeze

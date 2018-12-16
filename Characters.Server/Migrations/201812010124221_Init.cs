@@ -1,3 +1,5 @@
+// ReSharper disable all
+
 namespace IgiCore.Characters.Server.Migrations
 {
     using System.Data.Entity.Migrations;

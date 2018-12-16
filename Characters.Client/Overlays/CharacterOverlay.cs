@@ -18,16 +18,16 @@ namespace IgiCore.Characters.Client.Overlays
 		{
 			this.Characters = characters;
 
-			this.Attach("disconnect", (_, callback) => this.Disconnect?.Invoke(this, new OverlayEventArgs(this)));
-			this.Attach("load", (_, callback) => this.Send("load", this.Characters.ToArray()));
-			this.Attach<Character>("create", (character, callback) => this.Create?.Invoke(this, new CreateOverlayEventArgs(character, this)));
-			this.Attach<Guid>("select", (id, callback) => this.Select?.Invoke(this, new IdOverlayEventArgs(id, this)));
-			this.Attach<Guid>("delete", (id, callback) => this.Delete?.Invoke(this, new IdOverlayEventArgs(id, this)));
+			Attach("disconnect", (_, callback) => this.Disconnect?.Invoke(this, new OverlayEventArgs(this)));
+			Attach("load", (_, callback) => Send("load", this.Characters.ToArray()));
+			Attach<Character>("create", (character, callback) => this.Create?.Invoke(this, new CreateOverlayEventArgs(character, this)));
+			Attach<Guid>("select", (id, callback) => this.Select?.Invoke(this, new IdOverlayEventArgs(id, this)));
+			Attach<Guid>("delete", (id, callback) => this.Delete?.Invoke(this, new IdOverlayEventArgs(id, this)));
 		}
 
 		public void SyncCharacters()
 		{
-			this.Send("load", this.Characters.ToArray());
+			Send("load", this.Characters.ToArray());
 		}
 	}
 
