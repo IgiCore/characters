@@ -8,16 +8,8 @@ namespace IgiCore.Characters.Shared.Models
 	/// Represents a user's game character.
 	/// </summary>
 	[PublicAPI]
-	public interface ICharacter
+	public interface ICharacter : IIdentityModel
 	{
-		/// <summary>
-		/// Gets or sets the character identifier.
-		/// </summary>
-		/// <value>
-		/// The character identifier.
-		/// </value>
-		Guid Id { get; set; }
-
 		/// <summary>
 		/// Gets or sets the character forename.
 		/// </summary>
@@ -122,21 +114,5 @@ namespace IgiCore.Characters.Shared.Models
 		/// The timestamp of when the character was created.
 		/// </value>
 		DateTime? LastPlayed { get; set; }
-
-		/// <summary>
-		/// Gets or sets the timestamp of when the character was deleted.
-		/// </summary>
-		/// <value>
-		/// The timestamp of when the character was deleted.
-		/// </value>
-		DateTime? Deleted { get; set; }
-
-		/// <summary>
-		/// Gets or sets the timestamp of when the session was created.
-		/// </summary>
-		/// <value>
-		/// The timestamp of when the session was created.
-		/// </value>
-		DateTime Created { get; set; }
 	}
 }
