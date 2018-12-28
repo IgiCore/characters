@@ -10,13 +10,14 @@ using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rpc;
 using System;
 using System.Linq;
+using NFive.SDK.Server.Rcon;
 
 namespace IgiCore.Characters.Server
 {
 	[PublicAPI]
 	public class CharactersController : ConfigurableController<Configuration>
 	{
-		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, Configuration configuration) : base(logger, events, rpc, configuration)
+		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration) : base(logger, events, rpc, rcon, configuration)
 		{
 			this.Rpc.Event(CharacterEvents.Load).On(Load);
 
