@@ -71,12 +71,12 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NFive.SDK.Core.net, Version=0.1.0.26, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NFive.SDK.Core.0.1.0.26\lib\net452\NFive.SDK.Core.net.dll</HintPath>
+    <Reference Include="NFive.SDK.Core.net, Version=0.1.0.30, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NFive.SDK.Core.0.1.0.30\lib\net452\NFive.SDK.Core.net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NFive.SDK.Server.net, Version=0.1.0.23, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NFive.SDK.Server.0.1.0.23\lib\net452\NFive.SDK.Server.net.dll</HintPath>
+    <Reference Include="NFive.SDK.Server.net, Version=0.1.0.25, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NFive.SDK.Server.0.1.0.25\lib\net452\NFive.SDK.Server.net.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

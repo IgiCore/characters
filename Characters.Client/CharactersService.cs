@@ -5,6 +5,7 @@ using IgiCore.Characters.Client.Models;
 using IgiCore.Characters.Client.Overlays;
 using IgiCore.Characters.Shared;
 using JetBrains.Annotations;
+using NFive.SDK.Client.Commands;
 using NFive.SDK.Client.Events;
 using NFive.SDK.Client.Extensions;
 using NFive.SDK.Client.Interface;
@@ -12,10 +13,10 @@ using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
+using NFive.SessionManager.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NFive.SessionManager.Shared;
 
 namespace IgiCore.Characters.Client
 {
@@ -24,7 +25,7 @@ namespace IgiCore.Characters.Client
 	{
 		private CharacterOverlay overlay;
 
-		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, overlay, user) { }
+		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user) { }
 
 		public override async Task Started()
 		{

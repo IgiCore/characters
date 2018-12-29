@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using NFive.SDK.Server;
 
-[assembly: ServerPlugin(1)]
+[assembly: ServerPlugin(SDK.Version)]
 
 [assembly: AssemblyTitle("IgiCore Characters")]
 [assembly: AssemblyDescription("NFive Plugin")]
