@@ -2,8 +2,8 @@
 {
 	public static class CharacterEvents
 	{
-		public static readonly string Create = "igicore:character:create";
-		public static readonly string Load = "igicore:character:load";
-		public static readonly string Delete = "igicore:character:delete";
+		public const string Create = "igicore:character:create";
+		public const string Load = "igicore:character:load";
+		public const string Delete = "igicore:character:delete";
 	}
 }
