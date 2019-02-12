@@ -123,21 +123,9 @@ namespace IgiCore.Characters.Client
 			// Un-focus overlay
 			API.SetNuiFocus(false, false);
 
-			//this.Logger.Debug( new Serializer().Serialize(Game.Player.Character.Style.GetAllVariations()));
-
 			// Load and Render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
 			character.Render();
-
-			// Set character properties
-			//Game.Player.Character.Position = character.Position.ToVector3();
-			//Game.Player.Character.Health = character.Health;
-			//Game.Player.Character.Armor = character.Armor;
-			//Game.Player.Character.MovementAnimationSet = character.WalkingStyle;
-
-			// Load character model
-			//while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
-			//Game.Player.Character.Style.SetDefaultClothes();
 
 			// Unfreeze
 			Game.Player.Unfreeze();
