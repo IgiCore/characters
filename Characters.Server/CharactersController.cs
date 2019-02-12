@@ -63,6 +63,7 @@ namespace IgiCore.Characters.Server
 			character.Ssn = 10000000;
 			character.LastPlayed = DateTime.UtcNow;
 			character.Position = new Position(0f, 0f, 71f);
+			character.Appearance = new Appearance();
 
 			// Save character
 			using (var context = new StorageContext())

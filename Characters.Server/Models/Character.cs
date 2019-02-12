@@ -145,6 +145,15 @@ namespace IgiCore.Characters.Server.Models
 		[StringLength(200)] // TODO
 		public string WalkingStyle { get; set; }
 
+
+		/// <summary>
+		/// Gets or sets the appearance.
+		/// </summary>
+		/// <value>
+		/// The appearance.
+		/// </value>
+		public virtual Appearance Appearance { get; set; }
+
 		/// <inheritdoc />
 		/// <summary>
 		/// Gets or sets the timestamp of when the character was created.
