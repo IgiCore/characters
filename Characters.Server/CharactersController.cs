@@ -10,7 +10,9 @@ using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rcon;
 using NFive.SDK.Server.Rpc;
 using System;
+using System.Data.Entity.Migrations;
 using System.Linq;
+using CitizenFX.Core;
 
 namespace IgiCore.Characters.Server
 {
@@ -25,7 +27,9 @@ namespace IgiCore.Characters.Server
 
 			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
 
-			this.Rpc.Event(CharacterEvents.Save).On<Character>(Save);
+			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
+
+			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
 		}
 
 		public async void Delete(IRpcEvent e, Guid id)
@@ -94,17 +98,47 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-
-		public async void Save(IRpcEvent e, Character character)
+		public async void SaveCharacter(IRpcEvent e, Character character)
 		{
-			// For now I only care about positional updates
 			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
 			{
-				var saveCharacter = context.Characters.Single(c => c.Id == character.Id);
+				try
+				{
+					context.Characters.AddOrUpdate(character);
 
-				saveCharacter.Position = character.Position;
-				
-				await context.SaveChangesAsync();
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex);
+
+					transaction.Rollback();
+				}
+
+			}
+		}
+
+		public async void SavePosition(IRpcEvent e, Guid characterGuid, Position position)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var saveCharacter = context.Characters.Single(c => c.Id == characterGuid);
+					saveCharacter.Position = position;
+
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex);
+
+					transaction.Rollback();
+				}
 			}
 		}
 	}

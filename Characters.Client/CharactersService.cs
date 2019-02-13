@@ -30,7 +30,8 @@ namespace IgiCore.Characters.Client
 
 		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
 		{
-			this.Ticks.Attach(OnUpdate);
+			this.Ticks.Attach(OnSaveCharacter);
+			this.Ticks.Attach(OnSavePosition);
 		}
 
 		public override async Task Started()
@@ -141,26 +142,41 @@ namespace IgiCore.Characters.Client
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
 
+			// Set as playing
 			this.isPlaying = true;
 
+			// Set character as Active character
 			this.activeCharacter = character;
-			//Save(character);
 		}
 
-		public async Task OnUpdate()
+		public async Task OnSaveCharacter()
 		{
-			Update();
+			SaveCharacter();
+
+			await this.Delay(TimeSpan.FromMinutes(5));
+		}
+
+		public async Task OnSavePosition()
+		{
+			SavePosition();
 
 			await this.Delay(TimeSpan.FromSeconds(15));
 		}
 
-		private void Update()
+		private void SaveCharacter()
 		{
-			if (this.isPlaying)
-			{
-				this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
-				this.Rpc.Event(CharacterEvents.Save).Trigger(this.activeCharacter);
-			}
+			if (!this.isPlaying) return;
+			
+			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
+			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
+			
+		}
+
+		private void SavePosition()
+		{
+			if (!this.isPlaying) return;
+
+			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToPosition());
 		}
 	}
 }

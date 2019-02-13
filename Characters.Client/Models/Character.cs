@@ -24,8 +24,10 @@ namespace IgiCore.Characters.Client.Models
 		public Position Position { get; set; }
 		public string Model { get; set; }
 		public string WalkingStyle { get; set; }
+		public Guid AppearanceId { get; set; }
 		public Appearance Appearance { get; set; }
 		public DateTime? LastPlayed { get; set; }
+		public Guid UserId { get; set; }
 
 		[JsonIgnore] public string FullName => $"{this.Forename} {this.Middlename} {this.Surname}".Replace("  ", " ");
 
