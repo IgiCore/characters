@@ -83,6 +83,9 @@
       <HintPath>..\packages\NFive.SDK.Server.0.1.0.29\lib\net452\NFive.SDK.Server.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NFive.SessionManager.Server.net">
+      <HintPath>..\plugins\NFive\plugin-sessionmanager\NFive.SessionManager.Server.net.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
@@ -91,7 +94,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
     <Compile Include="Migrations\201902130549362_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Character.cs" />

@@ -24,8 +24,9 @@ namespace IgiCore.Characters.Client
 	[PublicAPI]
 	public class CharactersService : Service
 	{
+		private Configuration config;
 		private CharacterOverlay overlay;
-		protected bool isPlaying;
+		protected bool IsPlaying;
 		private Character activeCharacter;
 
 		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
@@ -36,6 +37,12 @@ namespace IgiCore.Characters.Client
 
 		public override async Task Started()
 		{
+			// Listen for server forced character save
+			this.Rpc.Event(CharacterEvents.Disconnecting).On(OnDisconnecting);
+
+			// Request server configuration
+			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
+
 			// Hide HUD
 			Screen.Hud.IsVisible = false;
 
@@ -83,6 +90,17 @@ namespace IgiCore.Characters.Client
 			// Fade in
 			Screen.Fading.FadeIn(500);
 			while (Screen.Fading.IsFadingIn) await Delay(10);
+		}
+
+		private void OnDisconnecting(IRpcEvent obj)
+		{
+			if (!this.IsPlaying) return;
+
+			SaveCharacter();
+
+			this.Logger.Debug("Disconnect forced save");
+
+			//TODO: Catching player data before disconnect happens, right now it happens After dc it seems
 		}
 
 		private async void OnCreate(object sender, CreateOverlayEventArgs e)
@@ -143,7 +161,7 @@ namespace IgiCore.Characters.Client
 			API.SwitchInPlayer(API.PlayerPedId());
 
 			// Set as playing
-			this.isPlaying = true;
+			this.IsPlaying = true;
 
 			// Set character as Active character
 			this.activeCharacter = character;
@@ -153,19 +171,19 @@ namespace IgiCore.Characters.Client
 		{
 			SaveCharacter();
 
-			await this.Delay(TimeSpan.FromMinutes(5));
+			await this.Delay(this.config.CharacterSaveInterval);
 		}
 
 		public async Task OnSavePosition()
 		{
 			SavePosition();
 
-			await this.Delay(TimeSpan.FromSeconds(15));
+			await this.Delay(this.config.PositionSaveInterval);
 		}
 
 		private void SaveCharacter()
 		{
-			if (!this.isPlaying) return;
+			if (!this.IsPlaying) return;
 			
 			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
 			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
@@ -174,7 +192,7 @@ namespace IgiCore.Characters.Client
 
 		private void SavePosition()
 		{
-			if (!this.isPlaying) return;
+			if (!this.IsPlaying) return;
 
 			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToPosition());
 		}

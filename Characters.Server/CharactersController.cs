@@ -12,7 +12,9 @@ using NFive.SDK.Server.Rpc;
 using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using CitizenFX.Core;
+using NFive.SessionManager.Server;
+using NFive.SessionManager.Server.Events;
+using Configuration = IgiCore.Characters.Shared.Configuration;
 
 namespace IgiCore.Characters.Server
 {
@@ -21,6 +23,9 @@ namespace IgiCore.Characters.Server
 	{
 		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration) : base(logger, events, rpc, rcon, configuration)
 		{
+			// Send configuration when requested
+			this.Rpc.Event(CharacterEvents.Configuration).On(e => e.Reply(this.Configuration));
+
 			this.Rpc.Event(CharacterEvents.Load).On(Load);
 
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
@@ -30,6 +35,16 @@ namespace IgiCore.Characters.Server
 			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
 
 			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
+
+			// Listen for NFive SessionManager plugin events
+			var sessions = new SessionManager(this.Events, this.Rpc);
+			sessions.ClientDisconnecting += OnClientDisconnecting;
+
+		}
+
+		private void OnClientDisconnecting(object sender, ClientEventArgs e)
+		{
+			this.Rpc.Event(CharacterEvents.Disconnecting).Trigger();
 		}
 
 		public async void Delete(IRpcEvent e, Guid id)

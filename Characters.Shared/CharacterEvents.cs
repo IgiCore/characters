@@ -2,6 +2,8 @@
 {
 	public static class CharacterEvents
 	{
+		public const string Configuration = "igicore:characters:configuration";
+		public const string Disconnecting = "igicore:character:disconnecting";
 		public const string Create = "igicore:character:create";
 		public const string Load = "igicore:character:load";
 		public const string Delete = "igicore:character:delete";
