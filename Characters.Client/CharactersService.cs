@@ -31,8 +31,7 @@ namespace IgiCore.Characters.Client
 
 		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
 		{
-			this.Ticks.Attach(OnSaveCharacter);
-			this.Ticks.Attach(OnSavePosition);
+			
 		}
 
 		public override async Task Started()
@@ -165,6 +164,11 @@ namespace IgiCore.Characters.Client
 
 			// Set character as Active character
 			this.activeCharacter = character;
+
+			// Attach Tick Handlers after character selection
+			// to reduce character select click lag
+			this.Ticks.Attach(OnSaveCharacter);
+			this.Ticks.Attach(OnSavePosition);
 		}
 
 		public async Task OnSaveCharacter()
