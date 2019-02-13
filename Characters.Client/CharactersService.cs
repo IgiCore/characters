@@ -14,10 +14,10 @@ using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
 using NFive.SessionManager.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NFive.SDK.Core.Rpc;
 
 namespace IgiCore.Characters.Client
 {
@@ -25,8 +25,13 @@ namespace IgiCore.Characters.Client
 	public class CharactersService : Service
 	{
 		private CharacterOverlay overlay;
+		protected bool isPlaying;
+		private Character activeCharacter;
 
-		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user) { }
+		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
+		{
+			this.Ticks.Attach(OnUpdate);
+		}
 
 		public override async Task Started()
 		{
@@ -135,6 +140,27 @@ namespace IgiCore.Characters.Client
 
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
+
+			this.isPlaying = true;
+
+			this.activeCharacter = character;
+			//Save(character);
+		}
+
+		public async Task OnUpdate()
+		{
+			Update();
+
+			await this.Delay(TimeSpan.FromSeconds(15));
+		}
+
+		private void Update()
+		{
+			if (this.isPlaying)
+			{
+				this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
+				this.Rpc.Event(CharacterEvents.Save).Trigger(this.activeCharacter);
+			}
 		}
 	}
 }

@@ -92,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
-    <Compile Include="Migrations\201902112351306_Init.cs" />
+    <Compile Include="Migrations\201902130549362_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Appearance.cs" />
@@ -110,8 +110,6 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Appearance\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

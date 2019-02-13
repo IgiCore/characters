@@ -7,10 +7,10 @@ using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
+using NFive.SDK.Server.Rcon;
 using NFive.SDK.Server.Rpc;
 using System;
 using System.Linq;
-using NFive.SDK.Server.Rcon;
 
 namespace IgiCore.Characters.Server
 {
@@ -24,6 +24,8 @@ namespace IgiCore.Characters.Server
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
 
 			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
+
+			this.Rpc.Event(CharacterEvents.Save).On<Character>(Save);
 		}
 
 		public async void Delete(IRpcEvent e, Guid id)
@@ -89,6 +91,20 @@ namespace IgiCore.Characters.Server
 
 					// TODO: Reply with an error so client doesn't hang
 				}
+			}
+		}
+
+
+		public async void Save(IRpcEvent e, Character character)
+		{
+			// For now I only care about positional updates
+			using (var context = new StorageContext())
+			{
+				var saveCharacter = context.Characters.Single(c => c.Id == character.Id);
+
+				saveCharacter.Position = character.Position;
+				
+				await context.SaveChangesAsync();
 			}
 		}
 	}

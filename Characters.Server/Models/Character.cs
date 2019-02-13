@@ -152,6 +152,11 @@ namespace IgiCore.Characters.Server.Models
 		/// <value>
 		/// The appearance.
 		/// </value>
+
+		[Required]
+		[ForeignKey("Appearance")]
+		public Guid AppearanceId { get; set; }
+
 		public virtual Appearance Appearance { get; set; }
 
 		/// <inheritdoc />

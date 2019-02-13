@@ -1,11 +1,11 @@
 ﻿using CitizenFX.Core;
 using IgiCore.Characters.Shared.Models;
-using Newtonsoft.Json;
-using NFive.SDK.Core.Models;
-using System;
 using IgiCore.Characters.Shared.Models.Appearance;
+using Newtonsoft.Json;
 using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
+using NFive.SDK.Core.Models;
+using System;
 using Prop = IgiCore.Characters.Shared.Models.Appearance.Prop;
 
 namespace IgiCore.Characters.Client.Models
