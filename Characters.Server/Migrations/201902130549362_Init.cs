@@ -130,9 +130,7 @@ namespace IgiCore.Characters.Server.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.Characters", "UserId", "dbo.Users");
-            DropForeignKey("dbo.Sessions", "UserId", "dbo.Users");
             DropForeignKey("dbo.Characters", "AppearanceId", "dbo.Appearances");
-            DropIndex("dbo.Sessions", new[] { "UserId" });
             DropIndex("dbo.Characters", new[] { "UserId" });
             DropIndex("dbo.Characters", new[] { "AppearanceId" });
             DropTable("dbo.Characters");
