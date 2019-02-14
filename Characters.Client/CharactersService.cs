@@ -158,12 +158,12 @@ namespace IgiCore.Characters.Client
 
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
+			
+			// Set character as Active character
+			this.activeCharacter = character;
 
 			// Set as playing
 			this.IsPlaying = true;
-
-			// Set character as Active character
-			this.activeCharacter = character;
 
 			// Attach Tick Handlers after character selection
 			// to reduce character select click lag
