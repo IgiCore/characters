@@ -145,14 +145,6 @@ namespace IgiCore.Characters.Server.Models
 		[StringLength(200)] // TODO
 		public string WalkingStyle { get; set; }
 
-
-		/// <summary>
-		/// Gets or sets the appearance.
-		/// </summary>
-		/// <value>
-		/// The appearance.
-		/// </value>
-
 		[Required]
 		[ForeignKey("Appearance")]
 		public Guid AppearanceId { get; set; }

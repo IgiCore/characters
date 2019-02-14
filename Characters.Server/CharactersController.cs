@@ -39,7 +39,6 @@ namespace IgiCore.Characters.Server
 			// Listen for NFive SessionManager plugin events
 			var sessions = new SessionManager(this.Events, this.Rpc);
 			sessions.ClientDisconnecting += OnClientDisconnecting;
-
 		}
 
 		private void OnClientDisconnecting(object sender, ClientEventArgs e)

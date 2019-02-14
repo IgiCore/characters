@@ -31,7 +31,7 @@ namespace IgiCore.Characters.Client.Models
 
 		[JsonIgnore] public string FullName => $"{this.Forename} {this.Middlename} {this.Surname}".Replace("  ", " ");
 
-		[JsonIgnore] public PedHash ModelHash => (PedHash) Convert.ToUInt32(this.Model);
+		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
 
 		public void Render()
 		{
@@ -67,7 +67,7 @@ namespace IgiCore.Characters.Client.Models
 
 		public void SetComponent(int type, int index, int texture)
 		{
-			PedComponents componentType = (PedComponents) type;
+			var componentType = (PedComponents)type;
 			Game.Player.Character.Style[componentType].Index = index;
 			Game.Player.Character.Style[componentType].TextureIndex = texture;
 
@@ -76,7 +76,7 @@ namespace IgiCore.Characters.Client.Models
 
 		public void SetProp(int type, int index, int texture)
 		{
-			PedProps propType = (PedProps) type;
+			var propType = (PedProps)type;
 			Game.Player.Character.Style[propType].Index = index;
 			Game.Player.Character.Style[propType].TextureIndex = texture;
 
