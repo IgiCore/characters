@@ -81,10 +81,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Characters.Server\Characters.Server.csproj">
-      <Project>{CB345C14-F839-4E4C-B338-71594E1BD472}</Project>
-      <Name>Characters.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Characters.Shared\Characters.Shared.csproj">
       <Project>{A2E2A212-DF9D-4680-B4E3-2A022E0E17F3}</Project>
       <Name>Characters.Shared</Name>
