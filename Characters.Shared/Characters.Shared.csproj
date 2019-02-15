@@ -53,7 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterEvents.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Models\Appearance\Component.cs" />
+    <Compile Include="Models\Appearance\ComponentTypes.cs" />
     <Compile Include="Models\ICharacter.cs" />
+    <Compile Include="Models\IAppearance.cs" />
+    <Compile Include="Models\Appearance\Prop.cs" />
+    <Compile Include="Models\Appearance\PropTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

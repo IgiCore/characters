@@ -83,17 +83,22 @@
       <HintPath>..\packages\NFive.SDK.Server.0.1.0.29\lib\net452\NFive.SDK.Server.net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="NFive.SessionManager.Server.net">
+      <HintPath>..\plugins\NFive\plugin-sessionmanager\NFive.SessionManager.Server.net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Migrations\201812010124221_Init.cs" />
-    <Compile Include="Migrations\201812010124221_Init.Designer.cs">
-      <DependentUpon>201812010124221_Init.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Migrations\201902130549362_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Character.cs" />
+    <Compile Include="Models\Appearance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CharactersController.cs" />
     <Compile Include="Storage\StorageContext.cs" />
@@ -108,10 +113,6 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812010124221_Init.resx">
-      <DependentUpon>201812010124221_Init.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

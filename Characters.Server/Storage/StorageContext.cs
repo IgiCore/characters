@@ -7,5 +7,7 @@ namespace IgiCore.Characters.Server.Storage
 	public class StorageContext : EFContext<StorageContext>
 	{
 		public DbSet<Character> Characters { get; set; }
+
+		public DbSet<Appearance> Appearances { get; set; }
 	}
 }

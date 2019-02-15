@@ -14,6 +14,7 @@ using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
 using NFive.SessionManager.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,12 +24,24 @@ namespace IgiCore.Characters.Client
 	[PublicAPI]
 	public class CharactersService : Service
 	{
+		private Configuration config;
 		private CharacterOverlay overlay;
+		protected bool IsPlaying;
+		private Character activeCharacter;
 
-		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user) { }
+		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
+		{
+			
+		}
 
 		public override async Task Started()
 		{
+			// Listen for server forced character save
+			this.Rpc.Event(CharacterEvents.Disconnecting).On(OnDisconnecting);
+
+			// Request server configuration
+			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
+
 			// Hide HUD
 			Screen.Hud.IsVisible = false;
 
@@ -78,16 +91,23 @@ namespace IgiCore.Characters.Client
 			while (Screen.Fading.IsFadingIn) await Delay(10);
 		}
 
+		private void OnDisconnecting(IRpcEvent obj)
+		{
+			if (!this.IsPlaying) return;
+
+			SaveCharacter();
+
+			this.Logger.Debug("Disconnect forced save");
+
+			//TODO: Catching player data before disconnect happens, right now it happens After dc it seems
+		}
+
 		private async void OnCreate(object sender, CreateOverlayEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
 
 			e.Character.WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK";
 			e.Character.Model = ((uint)PedHash.FreemodeMale01).ToString();
-
-			// TODO: DOB
-
-			this.Logger.Debug(e.Character.DateOfBirth.ToString());
 
 			// Send new character
 			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
@@ -122,15 +142,9 @@ namespace IgiCore.Characters.Client
 			// Un-focus overlay
 			API.SetNuiFocus(false, false);
 
-			// Set character properties
-			Game.Player.Character.Position = character.Position.ToVector3();
-			Game.Player.Character.Health = character.Health;
-			Game.Player.Character.Armor = character.Armor;
-			Game.Player.Character.MovementAnimationSet = character.WalkingStyle;
-
-			// Load character model
+			// Load and render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
-			Game.Player.Character.Style.SetDefaultClothes();
+			character.Render();
 
 			// Unfreeze
 			Game.Player.Unfreeze();
@@ -140,6 +154,46 @@ namespace IgiCore.Characters.Client
 
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
+			
+			// Set character as active character
+			this.activeCharacter = character;
+
+			// Set as playing
+			this.IsPlaying = true;
+
+			// Attach tick handlers after character selection
+			// to reduce character select click lag
+			this.Ticks.Attach(OnSaveCharacter);
+			this.Ticks.Attach(OnSavePosition);
+		}
+
+		public async Task OnSaveCharacter()
+		{
+			SaveCharacter();
+
+			await this.Delay(this.config.CharacterSaveInterval);
+		}
+
+		public async Task OnSavePosition()
+		{
+			SavePosition();
+
+			await this.Delay(this.config.PositionSaveInterval);
+		}
+
+		private void SaveCharacter()
+		{
+			if (!this.IsPlaying) return;
+			
+			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
+			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
+		}
+
+		private void SavePosition()
+		{
+			if (!this.IsPlaying) return;
+
+			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToPosition());
 		}
 	}
 }

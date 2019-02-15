@@ -145,6 +145,12 @@ namespace IgiCore.Characters.Server.Models
 		[StringLength(200)] // TODO
 		public string WalkingStyle { get; set; }
 
+		[Required]
+		[ForeignKey("Appearance")]
+		public Guid AppearanceId { get; set; }
+
+		public virtual Appearance Appearance { get; set; }
+
 		/// <inheritdoc />
 		/// <summary>
 		/// Gets or sets the timestamp of when the character was created.
