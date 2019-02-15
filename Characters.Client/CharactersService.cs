@@ -109,10 +109,6 @@ namespace IgiCore.Characters.Client
 			e.Character.WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK";
 			e.Character.Model = ((uint)PedHash.FreemodeMale01).ToString();
 
-			// TODO: DOB
-
-			this.Logger.Debug(e.Character.DateOfBirth.ToString());
-
 			// Send new character
 			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
 
@@ -146,7 +142,7 @@ namespace IgiCore.Characters.Client
 			// Un-focus overlay
 			API.SetNuiFocus(false, false);
 
-			// Load and Render character model
+			// Load and render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
 			character.Render();
 
@@ -159,13 +155,13 @@ namespace IgiCore.Characters.Client
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
 			
-			// Set character as Active character
+			// Set character as active character
 			this.activeCharacter = character;
 
 			// Set as playing
 			this.IsPlaying = true;
 
-			// Attach Tick Handlers after character selection
+			// Attach tick handlers after character selection
 			// to reduce character select click lag
 			this.Ticks.Attach(OnSaveCharacter);
 			this.Ticks.Attach(OnSavePosition);
@@ -191,7 +187,6 @@ namespace IgiCore.Characters.Client
 			
 			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
 			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
-			
 		}
 
 		private void SavePosition()
