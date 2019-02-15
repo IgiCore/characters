@@ -80,7 +80,7 @@ namespace IgiCore.Characters.Server
 			character.Alive = true;
 			character.Health = 10000;
 			character.Armor = 0;
-			character.Ssn = 10000000;
+			character.Ssn = Character.GenerateSsn();
 			character.LastPlayed = DateTime.UtcNow;
 			character.Position = new Position(0f, 0f, 71f);
 			character.Appearance = new Appearance();
