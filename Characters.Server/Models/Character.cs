@@ -5,6 +5,7 @@ using NFive.SDK.Core.Models.Player;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace IgiCore.Characters.Server.Models
 {
@@ -110,7 +111,7 @@ namespace IgiCore.Characters.Server.Models
 		/// The social security number.
 		/// </value>
 		[Required]
-		[Range(10000000, 999999999)]
+		[Range(1000000, 999999999)]
 		public int Ssn { get; set; }
 
 		/// <inheritdoc />
@@ -168,5 +169,18 @@ namespace IgiCore.Characters.Server.Models
 
 		[JsonIgnore]
 		public string FullName => $"{this.Forename} {this.Middlename} {this.Surname}".Replace("  ", " ");
+
+		public static int GenerateSsn()
+		{
+			var rng = new Random();
+
+			int ssn;
+			do
+			{
+				ssn = rng.Next(1000000, 999999999);
+			} while (Regex.IsMatch(ssn.ToString(), "^(?!b(d)1+b)(?!123456789|219099999|078051120)(?!666|000|9d{2})d{3}(?!00)d{2}(?!0{4})d{4}$")); // Validate its a valid US SSN
+
+			return ssn;
+		}
 	}
 }
