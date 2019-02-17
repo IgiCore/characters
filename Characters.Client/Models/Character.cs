@@ -6,6 +6,7 @@ using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
+using CitizenFX.Core.Native;
 using Prop = IgiCore.Characters.Shared.Models.Appearance.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -35,6 +36,9 @@ namespace IgiCore.Characters.Client.Models
 
 		public void Render()
 		{
+			// Apperantly this _must_ be called
+			Game.Player.Character.Style.SetDefaultClothes();
+
 			Game.Player.Character.Position = this.Position.ToVector3();
 			Game.Player.Character.Health = this.Health;
 			Game.Player.Character.Armor = this.Armor;
