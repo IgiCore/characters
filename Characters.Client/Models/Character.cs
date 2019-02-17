@@ -6,6 +6,7 @@ using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
+using CitizenFX.Core.Native;
 using Prop = IgiCore.Characters.Shared.Models.Appearance.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -33,19 +34,27 @@ namespace IgiCore.Characters.Client.Models
 
 		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
 
+		public Vector3 GetSafePosition()
+		{
+			return World.GetSafeCoordForPed(Game.Player.Character.Position, false, 16);
+		}
+
 		public void Render()
 		{
 			// Apperantly this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
 
-			Game.Player.Character.Position = this.Position.ToVector3();
+			Game.Player.Character.Position = this.GetSafePosition();
 			Game.Player.Character.Health = this.Health;
 			Game.Player.Character.Armor = this.Armor;
 			Game.Player.Character.MovementAnimationSet = this.WalkingStyle;
 
 			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Appearance.Face.Index, this.Appearance.Face.Texture);
 			Game.Player.Character.Style[PedComponents.Head].SetVariation(this.Appearance.Head.Index, this.Appearance.Head.Texture);
-			Game.Player.Character.Style[PedComponents.Hair].SetVariation(this.Appearance.Hair.Index, this.Appearance.Hair.Texture);
+
+			// Temporary VisibilityFix Workaround
+			Game.Player.Character.Style[PedComponents.Hair].SetVariation(1, 1);
+
 			Game.Player.Character.Style[PedComponents.Torso].SetVariation(this.Appearance.Torso.Index, this.Appearance.Torso.Texture);
 			Game.Player.Character.Style[PedComponents.Legs].SetVariation(this.Appearance.Legs.Index, this.Appearance.Legs.Texture);
 			Game.Player.Character.Style[PedComponents.Hands].SetVariation(this.Appearance.Hands.Index, this.Appearance.Hands.Texture);
