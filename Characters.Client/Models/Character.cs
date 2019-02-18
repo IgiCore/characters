@@ -2,6 +2,7 @@
 using IgiCore.Characters.Shared.Models;
 using IgiCore.Characters.Shared.Models.Appearance;
 using Newtonsoft.Json;
+using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
@@ -32,18 +33,12 @@ namespace IgiCore.Characters.Client.Models
 
 		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
 
-		public Vector3 GetSafePosition()
-		{
-			return World.GetSafeCoordForPed(Game.Player.Character.Position, false, 16);
-		}
-
 		public void Render()
 		{
 			// Apperantly this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
 
-			Game.Player.Character.Position = this.GetSafePosition();
-			Game.Player.Character.Health = this.Health;
+			Game.Player.Character.Position = this.Position.ToVector3();
 			Game.Player.Character.Armor = this.Armor;
 			Game.Player.Character.MovementAnimationSet = this.WalkingStyle;
 

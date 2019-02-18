@@ -160,6 +160,9 @@ namespace IgiCore.Characters.Client
 			// Set as playing
 			this.IsPlaying = true;
 
+			// Set player health (Rare #OnSpawnDeath Fix)
+			this.activeCharacter.Health = character.Health;
+
 			// Attach tick handlers after character selection
 			// to reduce character select click lag
 			this.Ticks.Attach(OnSaveCharacter);
