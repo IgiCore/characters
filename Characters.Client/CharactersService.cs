@@ -14,7 +14,6 @@ using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
 using NFive.SessionManager.Shared;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -160,6 +159,9 @@ namespace IgiCore.Characters.Client
 
 			// Set as playing
 			this.IsPlaying = true;
+
+			// Set player health (Rare #OnSpawnDeath Fix)
+			this.activeCharacter.Health = character.Health;
 
 			// Attach tick handlers after character selection
 			// to reduce character select click lag

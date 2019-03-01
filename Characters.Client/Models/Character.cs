@@ -35,14 +35,19 @@ namespace IgiCore.Characters.Client.Models
 
 		public void Render()
 		{
+			// Apperantly this _must_ be called
+			Game.Player.Character.Style.SetDefaultClothes();
+
 			Game.Player.Character.Position = this.Position.ToVector3();
-			Game.Player.Character.Health = this.Health;
 			Game.Player.Character.Armor = this.Armor;
 			Game.Player.Character.MovementAnimationSet = this.WalkingStyle;
 
 			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Appearance.Face.Index, this.Appearance.Face.Texture);
 			Game.Player.Character.Style[PedComponents.Head].SetVariation(this.Appearance.Head.Index, this.Appearance.Head.Texture);
-			Game.Player.Character.Style[PedComponents.Hair].SetVariation(this.Appearance.Hair.Index, this.Appearance.Hair.Texture);
+
+			// Temporary VisibilityFix Workaround
+			Game.Player.Character.Style[PedComponents.Hair].SetVariation(1, 1);
+
 			Game.Player.Character.Style[PedComponents.Torso].SetVariation(this.Appearance.Torso.Index, this.Appearance.Torso.Texture);
 			Game.Player.Character.Style[PedComponents.Legs].SetVariation(this.Appearance.Legs.Index, this.Appearance.Legs.Texture);
 			Game.Player.Character.Style[PedComponents.Hands].SetVariation(this.Appearance.Hands.Index, this.Appearance.Hands.Texture);
