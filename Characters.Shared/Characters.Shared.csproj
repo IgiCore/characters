@@ -60,6 +60,7 @@
     <Compile Include="Models\IAppearance.cs" />
     <Compile Include="Models\Appearance\Prop.cs" />
     <Compile Include="Models\Appearance\PropTypes.cs" />
+    <Compile Include="Models\ICharacterSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

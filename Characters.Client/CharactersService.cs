@@ -26,6 +26,7 @@ namespace IgiCore.Characters.Client
 		private Configuration config;
 		private CharacterOverlay overlay;
 		protected bool IsPlaying;
+		private CharacterSession session;
 		private Character activeCharacter;
 
 		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
@@ -35,9 +36,6 @@ namespace IgiCore.Characters.Client
 
 		public override async Task Started()
 		{
-			// Listen for server forced character save
-			this.Rpc.Event(CharacterEvents.Disconnecting).On(OnDisconnecting);
-
 			// Request server configuration
 			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
 
@@ -90,17 +88,6 @@ namespace IgiCore.Characters.Client
 			while (Screen.Fading.IsFadingIn) await Delay(10);
 		}
 
-		private void OnDisconnecting(IRpcEvent obj)
-		{
-			if (!this.IsPlaying) return;
-
-			SaveCharacter();
-
-			this.Logger.Debug("Disconnect forced save");
-
-			//TODO: Catching player data before disconnect happens, right now it happens After dc it seems
-		}
-
 		private async void OnCreate(object sender, CreateOverlayEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
@@ -111,6 +98,7 @@ namespace IgiCore.Characters.Client
 			// Send new character
 			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
 
+			this.session = await this.Rpc.Event(CharacterEvents.Select).Request<CharacterSession>(character.Id);
 			await Play(e.Overlay, character);
 		}
 
@@ -121,6 +109,7 @@ namespace IgiCore.Characters.Client
 
 		private async void OnSelect(object sender, IdOverlayEventArgs e)
 		{
+			this.session = await this.Rpc.Event(CharacterEvents.Select).Request<CharacterSession>(e.Id);
 			await Play(e.Overlay, this.overlay.Characters.First(c => c.Id == e.Id));
 		}
 

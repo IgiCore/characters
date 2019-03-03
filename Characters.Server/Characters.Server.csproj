@@ -95,10 +95,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201902130549362_Init.cs" />
+    <Compile Include="Characters.cs" />
+    <Compile Include="Events\CharacterEventArgs.cs" />
+    <Compile Include="Events\CharacterSessionEventArgs.cs" />
+    <Compile Include="Migrations\201903022332540_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Appearance.cs" />
+    <Compile Include="Models\CharacterSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CharactersController.cs" />
     <Compile Include="Storage\StorageContext.cs" />

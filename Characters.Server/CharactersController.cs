@@ -10,8 +10,10 @@ using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rcon;
 using NFive.SDK.Server.Rpc;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Threading.Tasks;
 using NFive.SessionManager.Server;
 using NFive.SessionManager.Server.Events;
 using Configuration = IgiCore.Characters.Shared.Configuration;
@@ -21,29 +23,79 @@ namespace IgiCore.Characters.Server
 	[PublicAPI]
 	public class CharactersController : ConfigurableController<Configuration>
 	{
+		private readonly SessionManager sessions;
+
+		private readonly List<CharacterSession> characterSessions = new List<CharacterSession>();
+
 		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration) : base(logger, events, rpc, rcon, configuration)
 		{
 			// Send configuration when requested
 			this.Rpc.Event(CharacterEvents.Configuration).On(e => e.Reply(this.Configuration));
-
 			this.Rpc.Event(CharacterEvents.Load).On(Load);
-
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
-
 			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
-
+			this.Rpc.Event(CharacterEvents.Select).On<Guid>(Select);
 			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
-
 			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
 
 			// Listen for NFive SessionManager plugin events
-			var sessions = new SessionManager(this.Events, this.Rpc);
-			sessions.ClientDisconnecting += OnClientDisconnecting;
+			this.sessions = new SessionManager(this.Events, this.Rpc);
+			this.sessions.ClientDisconnected += OnClientDisconnected;
+
+			this.Cleanup();
 		}
 
-		private void OnClientDisconnecting(object sender, ClientEventArgs e)
+		private void Cleanup()
 		{
-			this.Rpc.Event(CharacterEvents.Disconnecting).Trigger();
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				var activeSessions = context.CharacterSessions.Where(s => s.Disconnected == null).ToList();
+				var lastServerActiveTime = this.Events.Request<DateTime?>(BootEvents.GetLastActiveTime) ?? DateTime.UtcNow;
+				foreach (var characterSession in activeSessions)
+				{
+					characterSession.Connected = null;
+					characterSession.Disconnected = lastServerActiveTime;
+					context.CharacterSessions.AddOrUpdate(characterSession);
+				}
+
+				context.SaveChanges();
+				transaction.Commit();
+			}
+		}
+
+		private async void OnClientDisconnected(object sender, ClientSessionEventArgs e)
+		{
+			await this.DeselectAll(e.Session.UserId);
+		}
+
+		public async Task DeselectAll(Guid id)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				var activeSessions = context.CharacterSessions.Where(s =>
+					s.Character.UserId == id
+					&& s.Disconnected == null
+				).ToList();
+
+				foreach (var characterSession in activeSessions)
+				{
+					await this.Events.RaiseAsync(CharacterEvents.Deselecting, characterSession);
+					characterSession.Connected = null;
+					characterSession.Disconnected = DateTime.Now;
+					context.CharacterSessions.AddOrUpdate(characterSession);
+				}
+
+				await context.SaveChangesAsync();
+				transaction.Commit();
+
+				foreach (var characterSession in activeSessions)
+				{
+					this.characterSessions.Remove(characterSession);
+					await this.Events.RaiseAsync(CharacterEvents.Deselected, characterSession);
+				}
+			}
 		}
 
 		public async void Delete(IRpcEvent e, Guid id)
@@ -57,6 +109,43 @@ namespace IgiCore.Characters.Server
 				await context.SaveChangesAsync();
 
 				Load(e);
+			}
+		}
+
+		public async void Select(IRpcEvent e, Guid id)
+		{
+			await this.DeselectAll(e.User.Id);
+
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				var character = context.Characters.FirstOrDefault(c => c.Id == id);
+
+				if (character == null)
+				{
+					e.Reply(null);
+					throw new Exception($"No character found for Id \"{id}\""); // TODO: CharacterException
+				}
+				await this.Events.RaiseAsync(CharacterEvents.Selecting, character);
+
+				var newSession = new CharacterSession
+				{
+					Id = GuidGenerator.GenerateTimeBasedGuid(),
+					CharacterId = character.Id,
+					Created = DateTime.UtcNow,
+					Connected = DateTime.UtcNow,
+				};
+
+				context.CharacterSessions.Add(newSession);
+
+				await context.SaveChangesAsync();
+				transaction.Commit();
+
+				await this.Events.RaiseAsync(CharacterEvents.Selected, newSession);
+
+				e.Reply(newSession);
+
+				this.characterSessions.Add(newSession);
 			}
 		}
 
