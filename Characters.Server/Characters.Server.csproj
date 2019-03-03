@@ -95,7 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Characters.cs" />
+    <Compile Include="CharacterManager.cs" />
     <Compile Include="Events\CharacterEventArgs.cs" />
     <Compile Include="Events\CharacterSessionEventArgs.cs" />
     <Compile Include="Migrations\201903022332540_Init.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using IgiCore.Characters.Server.Events;
 using IgiCore.Characters.Server.Models;
 using IgiCore.Characters.Shared;
@@ -12,7 +13,7 @@ namespace IgiCore.Characters.Server
 	/// Wrapper library for accessing character data from external plugins.
 	/// </summary>
 	[PublicAPI]
-	public class Characters
+	public class CharacterManager
 	{
 		/// <summary>
 		/// The controller event manager.
@@ -45,11 +46,20 @@ namespace IgiCore.Characters.Server
 		public event EventHandler<CharacterSessionEventArgs> Deselected;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Characters"/> class.
+		/// Gets the active character sessions.
+		/// </summary>
+		/// <value>
+		/// The active character sessions.
+		/// </value>
+		public List<CharacterSession> ActiveCharacterSessions =>
+			this.Events.Request<List<CharacterSession>>(CharacterEvents.GetActive);
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CharacterManager"/> class.
 		/// </summary>
 		/// <param name="events">The controller event manager.</param>
 		/// <param name="rpc">The controller RPC handler.</param>
-		public Characters(IEventManager events, IRpcHandler rpc)
+		public CharacterManager(IEventManager events, IRpcHandler rpc)
 		{
 			this.Events = events;
 			this.Rpc = rpc;

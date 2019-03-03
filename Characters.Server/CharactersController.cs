@@ -38,6 +38,8 @@ namespace IgiCore.Characters.Server
 			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
 			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
 
+			this.Events.OnRequest(CharacterEvents.GetActive, () => this.characterSessions);
+
 			// Listen for NFive SessionManager plugin events
 			this.sessions = new SessionManager(this.Events, this.Rpc);
 			this.sessions.ClientDisconnected += OnClientDisconnected;
@@ -83,7 +85,7 @@ namespace IgiCore.Characters.Server
 				{
 					await this.Events.RaiseAsync(CharacterEvents.Deselecting, characterSession);
 					characterSession.Connected = null;
-					characterSession.Disconnected = DateTime.Now;
+					characterSession.Disconnected = DateTime.UtcNow;
 					context.CharacterSessions.AddOrUpdate(characterSession);
 				}
 
@@ -92,7 +94,7 @@ namespace IgiCore.Characters.Server
 
 				foreach (var characterSession in activeSessions)
 				{
-					this.characterSessions.Remove(characterSession);
+					this.characterSessions.RemoveAll(c => c.Id == characterSession.Id);
 					await this.Events.RaiseAsync(CharacterEvents.Deselected, characterSession);
 				}
 			}
