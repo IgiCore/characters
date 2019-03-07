@@ -1,4 +1,4 @@
-﻿using IgiCore.Characters.Shared.Models;
+using IgiCore.Characters.Shared.Models;
 using IgiCore.Characters.Shared.Models.Appearance;
 using System;
 

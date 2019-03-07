@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using IgiCore.Characters.Server.Models;
 using JetBrains.Annotations;
 

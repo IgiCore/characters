@@ -1,4 +1,4 @@
-﻿using IgiCore.Characters.Shared.Models.Appearance;
+using IgiCore.Characters.Shared.Models.Appearance;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 

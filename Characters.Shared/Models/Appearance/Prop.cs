@@ -1,4 +1,4 @@
-﻿namespace IgiCore.Characters.Shared.Models.Appearance
+namespace IgiCore.Characters.Shared.Models.Appearance
 {
 	public class Prop
 	{

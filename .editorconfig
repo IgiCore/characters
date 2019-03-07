@@ -1,6 +1,7 @@
 root = true
 
 [*]
+charset = utf-8
 indent_style = tab
 indent_size = 4
 end_of_line = crlf
@@ -13,3 +14,6 @@ indent_size = 2
 
 [*.{csproj,config}]
 insert_final_newline = false
+
+[*.{csproj,config,sln.DotSettings}]
+charset = utf-8-bom

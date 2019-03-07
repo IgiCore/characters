@@ -1,4 +1,4 @@
-﻿using IgiCore.Characters.Shared.Models;
+using IgiCore.Characters.Shared.Models;
 using Newtonsoft.Json;
 using NFive.SDK.Core.Models;
 using NFive.SDK.Core.Models.Player;

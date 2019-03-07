@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using IgiCore.Characters.Shared.Models;
 using Newtonsoft.Json;
 

@@ -1,4 +1,4 @@
-﻿using IgiCore.Characters.Client.Models;
+using IgiCore.Characters.Client.Models;
 using NFive.SDK.Client.Interface;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using CitizenFX.Core;
+using CitizenFX.Core;
 using IgiCore.Characters.Shared.Models;
 using IgiCore.Characters.Shared.Models.Appearance;
 using Newtonsoft.Json;

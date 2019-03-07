@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using IgiCore.Characters.Server.Events;
 using IgiCore.Characters.Server.Models;
@@ -81,4 +81,3 @@ namespace IgiCore.Characters.Server
 		}
 	}
 }
-

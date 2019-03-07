@@ -1,4 +1,4 @@
-﻿namespace IgiCore.Characters.Shared
+namespace IgiCore.Characters.Shared
 {
 	public static class CharacterEvents
 	{

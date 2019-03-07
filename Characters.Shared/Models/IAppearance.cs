@@ -1,4 +1,4 @@
-﻿using IgiCore.Characters.Shared.Models.Appearance;
+using IgiCore.Characters.Shared.Models.Appearance;
 using JetBrains.Annotations;
 using NFive.SDK.Core.Models;
 
