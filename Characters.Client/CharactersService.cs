@@ -13,7 +13,6 @@ using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
-using NFive.SessionManager.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,16 +22,13 @@ namespace IgiCore.Characters.Client
 	[PublicAPI]
 	public class CharactersService : Service
 	{
+		private bool isPlaying;
 		private Configuration config;
 		private CharacterOverlay overlay;
-		protected bool IsPlaying;
 		private CharacterSession session;
 		private Character activeCharacter;
 
-		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user)
-		{
-			
-		}
+		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user) { }
 
 		public override async Task Started()
 		{
@@ -142,12 +138,12 @@ namespace IgiCore.Characters.Client
 
 			// Switch in
 			API.SwitchInPlayer(API.PlayerPedId());
-			
+
 			// Set character as active character
 			this.activeCharacter = character;
 
 			// Set as playing
-			this.IsPlaying = true;
+			this.isPlaying = true;
 
 			// Set player health (Rare #OnSpawnDeath Fix)
 			this.activeCharacter.Health = character.Health;
@@ -162,27 +158,27 @@ namespace IgiCore.Characters.Client
 		{
 			SaveCharacter();
 
-			await this.Delay(this.config.CharacterSaveInterval);
+			await Delay(this.config.CharacterSaveInterval);
 		}
 
 		public async Task OnSavePosition()
 		{
 			SavePosition();
 
-			await this.Delay(this.config.PositionSaveInterval);
+			await Delay(this.config.PositionSaveInterval);
 		}
 
 		private void SaveCharacter()
 		{
-			if (!this.IsPlaying) return;
-			
+			if (!this.isPlaying) return;
+
 			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
 			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
 		}
 
 		private void SavePosition()
 		{
-			if (!this.IsPlaying) return;
+			if (!this.isPlaying) return;
 
 			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToPosition());
 		}

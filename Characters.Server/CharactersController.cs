@@ -9,13 +9,12 @@ using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rcon;
 using NFive.SDK.Server.Rpc;
+using NFive.SDK.Server.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
-using NFive.SessionManager.Server;
-using NFive.SessionManager.Server.Events;
 using Configuration = IgiCore.Characters.Shared.Configuration;
 
 namespace IgiCore.Characters.Server
@@ -44,7 +43,7 @@ namespace IgiCore.Characters.Server
 			this.sessions = new SessionManager(this.Events, this.Rpc);
 			this.sessions.ClientDisconnected += OnClientDisconnected;
 
-			this.Cleanup();
+			Cleanup();
 		}
 
 		private void Cleanup()
@@ -68,7 +67,7 @@ namespace IgiCore.Characters.Server
 
 		private async void OnClientDisconnected(object sender, ClientSessionEventArgs e)
 		{
-			await this.DeselectAll(e.Session.UserId);
+			await DeselectAll(e.Session.UserId);
 		}
 
 		public async Task DeselectAll(Guid id)
@@ -116,7 +115,7 @@ namespace IgiCore.Characters.Server
 
 		public async void Select(IRpcEvent e, Guid id)
 		{
-			await this.DeselectAll(e.User.Id);
+			await DeselectAll(e.User.Id);
 
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
@@ -135,7 +134,7 @@ namespace IgiCore.Characters.Server
 					Id = GuidGenerator.GenerateTimeBasedGuid(),
 					CharacterId = character.Id,
 					Created = DateTime.UtcNow,
-					Connected = DateTime.UtcNow,
+					Connected = DateTime.UtcNow
 				};
 
 				context.CharacterSessions.Add(newSession);

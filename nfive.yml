@@ -21,5 +21,3 @@ client:
   - Overlays/main.js
   - Overlays/pricedown.woff2
   - Overlays/style.css
-dependencies:
-  NFive/plugin-sessionmanager: '*'
