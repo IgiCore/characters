@@ -1,6 +1,5 @@
 using IgiCore.Characters.Shared.Models;
 using System;
-using NFive.SDK.Core.Models;
 
 namespace IgiCore.Characters.Client.Models
 {
@@ -9,8 +8,8 @@ namespace IgiCore.Characters.Client.Models
 		public Guid Id { get; set; }
 		public DateTime Created { get; set; }
 		public DateTime? Deleted { get; set; }
-		public int Mother { get; set; }
-		public int Father { get; set; }
+		public int Parent1 { get; set; }
+		public int Parent2 { get; set; }
 		public float Resemblance { get; set; }
 		public float SkinTone { get; set; }
 	}

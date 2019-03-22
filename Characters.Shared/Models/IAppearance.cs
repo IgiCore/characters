@@ -9,7 +9,7 @@ namespace IgiCore.Characters.Shared.Models
 		int HairColorId { get; set; }
 		int HairHighlightColor { get; set; }
 		
-		Feature Ageing { get; set; }
+		Feature Aging { get; set; }
 		Feature Beard { get; set; }
 		Feature Blush { get; set; }
 		Feature Blemishes { get; set; }

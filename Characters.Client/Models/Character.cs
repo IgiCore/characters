@@ -54,10 +54,10 @@ namespace IgiCore.Characters.Client.Models
 			// https://wiki.gt-mp.net/index.php/Character_Components
 			// https://wiki.gt-mp.net/index.php?title=Hair_Colors
 
-			API.SetPedHeadBlendData(player, this.Heritage.Mother,this.Heritage.Father,0, this.Heritage.Mother, this.Heritage.Father, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
+			API.SetPedHeadBlendData(player, this.Heritage.Parent1,this.Heritage.Parent2,0, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
 
 			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
-			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Ageing.Index, this.Appearance.Ageing.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Aging.Index, this.Appearance.Aging.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
 			API.SetPedEyeColor(player, this.Appearance.EyeColorId);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Eyebrows, this.Appearance.Eyebrows.Index, this.Appearance.Eyebrows.Opacity);
@@ -101,7 +101,7 @@ namespace IgiCore.Characters.Client.Models
 
 		public void Render(ILogger logger)
 		{
-			// Apperantly this _must_ be called
+			// Apparently this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
 
 			Game.Player.Character.Position = this.Position.ToVector3();

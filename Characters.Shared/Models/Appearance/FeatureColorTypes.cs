@@ -1,6 +1,5 @@
 namespace IgiCore.Characters.Shared.Models.Appearance
 {
-
 	/// <summary>
 	/// Used for freemode(online) characters.
 	///	ColorType is 1 for eyebrows, beards, and chest hair; 2 for blush and lipstick; and 0 otherwise, though not called in those cases.
