@@ -94,7 +94,7 @@
     <Compile Include="CharacterManager.cs" />
     <Compile Include="Events\CharacterEventArgs.cs" />
     <Compile Include="Events\CharacterSessionEventArgs.cs" />
-    <Compile Include="Migrations\201903221943534_Init.cs" />
+    <Compile Include="Migrations\201903222156468_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Appearance.cs" />
     <Compile Include="Models\Character.cs" />

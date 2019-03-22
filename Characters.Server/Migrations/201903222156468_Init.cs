@@ -8,14 +8,14 @@ using System.Data.Entity.Migrations.Infrastructure;
 
 namespace IgiCore.Characters.Server.Migrations
 {
-    [GeneratedCode("NFive.Migration", "0.2 Alpha Build 119")]
+    [GeneratedCode("NFive.Migration", "0.3 Alpha Build 148")]
     public class Init : DbMigration, IMigrationMetadata
     {
-        string IMigrationMetadata.Id => "201903221943534_Init";
+        string IMigrationMetadata.Id => "201903222156468_Init";
         
         string IMigrationMetadata.Source => null;
         
-        string IMigrationMetadata.Target => "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";
+        string IMigrationMetadata.Target => "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";
         
         public override void Up()
         {
@@ -143,75 +143,67 @@ namespace IgiCore.Characters.Server.Migrations
                         EyeColorId = c.Int(nullable: false),
                         HairColorId = c.Int(nullable: false),
                         HairHighlightColor = c.Int(nullable: false),
-                        Cheeks = c.Single(nullable: false),
-                        EyesWidth = c.Single(nullable: false),
-                        Lips = c.Single(nullable: false),
-                        Brows_X = c.Single(nullable: false),
-                        Brows_Y = c.Single(nullable: false),
-                        CheekBones_X = c.Single(nullable: false),
-                        CheekBones_Y = c.Single(nullable: false),
-                        ChinProfile_X = c.Single(nullable: false),
-                        ChinProfile_Y = c.Single(nullable: false),
-                        ChinShape_X = c.Single(nullable: false),
-                        ChinShape_Y = c.Single(nullable: false),
-                        Jaw_X = c.Single(nullable: false),
-                        Jaw_Y = c.Single(nullable: false),
-                        Nose_X = c.Single(nullable: false),
-                        Nose_Y = c.Single(nullable: false),
-                        NoseProfile_X = c.Single(nullable: false),
-                        NoseProfile_Y = c.Single(nullable: false),
-                        NoseTip_X = c.Single(nullable: false),
-                        NoseTip_Y = c.Single(nullable: false),
-                        Ageing_Index = c.Int(nullable: false),
-                        Ageing_Opacity = c.Single(nullable: false),
-                        Ageing_ColorType = c.Int(nullable: false),
-                        Ageing_ColorId = c.Int(nullable: false),
-                        Ageing_SecondColorId = c.Int(nullable: false),
+                        Aging_Type = c.Int(nullable: false),
+                        Aging_Index = c.Int(nullable: false),
+                        Aging_Opacity = c.Single(nullable: false),
+                        Aging_ColorType = c.Int(nullable: false),
+                        Aging_ColorId = c.Int(nullable: false),
+                        Aging_SecondColorId = c.Int(nullable: false),
+                        Beard_Type = c.Int(nullable: false),
                         Beard_Index = c.Int(nullable: false),
                         Beard_Opacity = c.Single(nullable: false),
                         Beard_ColorType = c.Int(nullable: false),
                         Beard_ColorId = c.Int(nullable: false),
                         Beard_SecondColorId = c.Int(nullable: false),
+                        Blush_Type = c.Int(nullable: false),
                         Blush_Index = c.Int(nullable: false),
                         Blush_Opacity = c.Single(nullable: false),
                         Blush_ColorType = c.Int(nullable: false),
                         Blush_ColorId = c.Int(nullable: false),
                         Blush_SecondColorId = c.Int(nullable: false),
+                        Blemishes_Type = c.Int(nullable: false),
                         Blemishes_Index = c.Int(nullable: false),
                         Blemishes_Opacity = c.Single(nullable: false),
                         Blemishes_ColorType = c.Int(nullable: false),
                         Blemishes_ColorId = c.Int(nullable: false),
                         Blemishes_SecondColorId = c.Int(nullable: false),
+                        Chest_Type = c.Int(nullable: false),
                         Chest_Index = c.Int(nullable: false),
                         Chest_Opacity = c.Single(nullable: false),
                         Chest_ColorType = c.Int(nullable: false),
                         Chest_ColorId = c.Int(nullable: false),
                         Chest_SecondColorId = c.Int(nullable: false),
+                        Complexion_Type = c.Int(nullable: false),
                         Complexion_Index = c.Int(nullable: false),
                         Complexion_Opacity = c.Single(nullable: false),
                         Complexion_ColorType = c.Int(nullable: false),
                         Complexion_ColorId = c.Int(nullable: false),
                         Complexion_SecondColorId = c.Int(nullable: false),
+                        Eyebrows_Type = c.Int(nullable: false),
                         Eyebrows_Index = c.Int(nullable: false),
                         Eyebrows_Opacity = c.Single(nullable: false),
                         Eyebrows_ColorType = c.Int(nullable: false),
                         Eyebrows_ColorId = c.Int(nullable: false),
                         Eyebrows_SecondColorId = c.Int(nullable: false),
+                        Lipstick_Type = c.Int(nullable: false),
                         Lipstick_Index = c.Int(nullable: false),
                         Lipstick_Opacity = c.Single(nullable: false),
                         Lipstick_ColorType = c.Int(nullable: false),
                         Lipstick_ColorId = c.Int(nullable: false),
                         Lipstick_SecondColorId = c.Int(nullable: false),
+                        Makeup_Type = c.Int(nullable: false),
                         Makeup_Index = c.Int(nullable: false),
                         Makeup_Opacity = c.Single(nullable: false),
                         Makeup_ColorType = c.Int(nullable: false),
                         Makeup_ColorId = c.Int(nullable: false),
                         Makeup_SecondColorId = c.Int(nullable: false),
+                        MolesAndFreckles_Type = c.Int(nullable: false),
                         MolesAndFreckles_Index = c.Int(nullable: false),
                         MolesAndFreckles_Opacity = c.Single(nullable: false),
                         MolesAndFreckles_ColorType = c.Int(nullable: false),
                         MolesAndFreckles_ColorId = c.Int(nullable: false),
                         MolesAndFreckles_SecondColorId = c.Int(nullable: false),
+                        SunDamage_Type = c.Int(nullable: false),
                         SunDamage_Index = c.Int(nullable: false),
                         SunDamage_Opacity = c.Single(nullable: false),
                         SunDamage_ColorType = c.Int(nullable: false),
@@ -257,15 +249,15 @@ namespace IgiCore.Characters.Server.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Mother = c.Int(nullable: false),
-                        Father = c.Int(nullable: false),
+                        Parent1 = c.Int(nullable: false),
+                        Parent2 = c.Int(nullable: false),
                         Resemblance = c.Single(nullable: false),
                         SkinTone = c.Single(nullable: false),
                         Created = c.DateTime(nullable: false, precision: 0),
                         Deleted = c.DateTime(precision: 0),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
             CreateTable(
                 "dbo.CharacterSessions",
                 c => new
