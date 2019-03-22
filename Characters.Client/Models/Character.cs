@@ -5,8 +5,10 @@ using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using CitizenFX.Core.Native;
 using IgiCore.Characters.Shared.Models.Apparel;
+using IgiCore.Characters.Shared.Models.Appearance;
 using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -27,6 +29,8 @@ namespace IgiCore.Characters.Client.Models
 		public string WalkingStyle { get; set; }
 		public Guid ApparelId { get; set; }
 		public Apparel Apparel { get; set; }
+		public Guid AppearanceId { get; set; }
+		public Appearance Appearance { get; set; }
 		public DateTime? LastPlayed { get; set; }
 		public Guid UserId { get; set; }
 
@@ -44,16 +48,16 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedHeadBlendData(player, 0,21,0, 0, 0, 0, 0.5f, 0.5f, 0.5f, true);
 
 			// Hair Color https://wiki.gt-mp.net/index.php?title=Hair_Colors
-			API.SetPedHairColor(player, 35, 38);
+			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
 
 			// Age & Opacity
-			API.SetPedHeadOverlay(player, 3, 0, 0f);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Age.Index, this.Appearance.Age.Opacity);
 
 			// Beard & Opcacity
-			API.SetPedHeadOverlay(player, 1, 0, 0f);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
 
 			// Eye color
-			API.SetPedEyeColor(player, 0);
+			API.SetPedEyeColor(player, this.Appearance.EyeColorId);
 
 			// EyeBrows & Opacity
 			API.SetPedHeadOverlay(player, 2, 0, 0f);
@@ -65,10 +69,10 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedHeadOverlay(player, 8, 0, 0f);
 
 			// Hair
-			API.SetPedComponentVariation(player, 2, 0, 0, 0);
+			//API.SetPedComponentVariation(player, 2, 0, 0, 0);
 
 			// Beard Color
-			API.SetPedHeadOverlayColor(player, 1, 0, 0, 0);
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Beard, (int)this.Appearance.Beard.ColorType, this.Appearance.Beard.ColorId, this.Appearance.Beard.SecondColorId);
 
 			// EyeBrows Color
 			API.SetPedHeadOverlayColor(player, 2, 0,0,0);
@@ -103,6 +107,7 @@ namespace IgiCore.Characters.Client.Models
 			// Body Blemishes & Opacity
 			API.SetPedHeadOverlay(player, 11,0,0f);
 
+			API.SetPedFaceFeature(player,0,0f);
 
 		}
 

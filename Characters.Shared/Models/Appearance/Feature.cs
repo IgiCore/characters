@@ -17,10 +17,10 @@ namespace IgiCore.Characters.Shared.Models.Appearance
 
 		public int SecondColorId { get; set; }
 
-		public Feature(FeatureTypes featureType, FeatureColorTypes featureColorType)
-		{
-			this.Type = featureType;
-			this.ColorType = featureColorType;
-		}
+		//public Feature(FeatureTypes featureType = FeatureTypes.Age, FeatureColorTypes featureColorType = FeatureColorTypes.Misc)
+		//{
+		//	this.Type = featureType;
+		//	this.ColorType = featureColorType;
+		//}
 	}
 }

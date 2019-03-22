@@ -60,6 +60,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Appearance.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Apparel.cs" />
     <Compile Include="Models\CharacterSession.cs" />
