@@ -40,6 +40,15 @@ namespace IgiCore.Characters.Server.Models
 		{
 			this.Id = GuidGenerator.GenerateTimeBasedGuid();
 
+			this.Brows = new FeaturePointF();
+			this.CheekBones = new FeaturePointF();
+			this.ChinProfile = new FeaturePointF();
+			this.ChinShape = new FeaturePointF();
+			this.Jaw = new FeaturePointF();
+			this.Nose = new FeaturePointF();
+			this.NoseProfile = new FeaturePointF();
+			this.NoseTip = new FeaturePointF();
+
 			this.Age = new Feature();
 			this.Beard = new Feature();
 			this.Blemishes = new Feature();
