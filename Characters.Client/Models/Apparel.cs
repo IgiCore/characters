@@ -1,10 +1,10 @@
 using IgiCore.Characters.Shared.Models;
-using IgiCore.Characters.Shared.Models.Appearance;
 using System;
+using IgiCore.Characters.Shared.Models.Apparel;
 
 namespace IgiCore.Characters.Client.Models
 {
-	public class Appearance : IAppearance
+	public class Apparel : IApparel
 	{
 		public Guid Id { get; set; }
 		public DateTime Created { get; set; }

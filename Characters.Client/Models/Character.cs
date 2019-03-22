@@ -1,12 +1,13 @@
 using CitizenFX.Core;
 using IgiCore.Characters.Shared.Models;
-using IgiCore.Characters.Shared.Models.Appearance;
 using Newtonsoft.Json;
 using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
-using Prop = IgiCore.Characters.Shared.Models.Appearance.Prop;
+using CitizenFX.Core.Native;
+using IgiCore.Characters.Shared.Models.Apparel;
+using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
 {
@@ -24,14 +25,92 @@ namespace IgiCore.Characters.Client.Models
 		public Position Position { get; set; }
 		public string Model { get; set; }
 		public string WalkingStyle { get; set; }
-		public Guid AppearanceId { get; set; }
-		public Appearance Appearance { get; set; }
+		public Guid ApparelId { get; set; }
+		public Apparel Apparel { get; set; }
 		public DateTime? LastPlayed { get; set; }
 		public Guid UserId { get; set; }
 
 		[JsonIgnore] public string FullName => $"{this.Forename} {this.Middlename} {this.Surname}".Replace("  ", " ");
 
 		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
+
+
+		public void RenderCustom()
+		{
+			var player = Game.Player.Character.Handle;
+			//https://gtaforums.com/topic/858970-all-gtao-face-ids-pedset_ped_head_blend_data-explained/
+			//https://wiki.gt-mp.net/index.php/Character_Components
+
+			API.SetPedHeadBlendData(player, 0,21,0, 0, 0, 0, 0.5f, 0.5f, 0.5f, true);
+
+			// Hair Color https://wiki.gt-mp.net/index.php?title=Hair_Colors
+			API.SetPedHairColor(player, 35, 38);
+
+			// Age & Opacity
+			API.SetPedHeadOverlay(player, 3, 0, 0f);
+
+			// Beard & Opcacity
+			API.SetPedHeadOverlay(player, 1, 0, 0f);
+
+			// Eye color
+			API.SetPedEyeColor(player, 0);
+
+			// EyeBrows & Opacity
+			API.SetPedHeadOverlay(player, 2, 0, 0f);
+
+			// Make up & Opacity
+			API.SetPedHeadOverlay(player, 4, 0, 0f);
+
+			// Lipstick
+			API.SetPedHeadOverlay(player, 8, 0, 0f);
+
+			// Hair
+			API.SetPedComponentVariation(player, 2, 0, 0, 0);
+
+			// Beard Color
+			API.SetPedHeadOverlayColor(player, 1, 0, 0, 0);
+
+			// EyeBrows Color
+			API.SetPedHeadOverlayColor(player, 2, 0,0,0);
+
+			// Make up Color
+			API.SetPedHeadOverlayColor(player, 4, 1,0,0);
+
+			// Lipstick Color
+			API.SetPedHeadOverlayColor(player, 8,1,0,0);
+
+			// Blush & Opacity
+			API.SetPedHeadOverlay(player, 5, 0, 0f);
+
+			// Blush Color
+			API.SetPedHeadOverlayColor(player, 5, 2, 0,0);
+
+			// Complexion
+			API.SetPedHeadOverlay(player, 6, 0,0f);
+
+			// Sun Damage
+			API.SetPedHeadOverlay(player, 7, 0, 0f);
+
+			// Moles & Freckles
+			API.SetPedHeadOverlay(player, 9, 0, 0f);
+
+			// ChestHair & Opacity
+			API.SetPedHeadOverlay(player, 10, 0, 0f);
+
+			// Torso Color
+			API.SetPedHeadOverlayColor(player, 10, 1, 0,0);
+
+			// Body Blemishes & Opacity
+			API.SetPedHeadOverlay(player, 11,0,0f);
+
+
+		}
+
+
+
+
+
+
 
 		public void Render()
 		{
@@ -42,32 +121,34 @@ namespace IgiCore.Characters.Client.Models
 			Game.Player.Character.Armor = this.Armor;
 			Game.Player.Character.MovementAnimationSet = this.WalkingStyle;
 
-			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Appearance.Face.Index, this.Appearance.Face.Texture);
-			Game.Player.Character.Style[PedComponents.Head].SetVariation(this.Appearance.Head.Index, this.Appearance.Head.Texture);
+			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Apparel.Face.Index, this.Apparel.Face.Texture);
+			Game.Player.Character.Style[PedComponents.Head].SetVariation(this.Apparel.Head.Index, this.Apparel.Head.Texture);
 
 			// Temporary VisibilityFix Workaround
 			Game.Player.Character.Style[PedComponents.Hair].SetVariation(1, 1);
 
-			Game.Player.Character.Style[PedComponents.Torso].SetVariation(this.Appearance.Torso.Index, this.Appearance.Torso.Texture);
-			Game.Player.Character.Style[PedComponents.Legs].SetVariation(this.Appearance.Legs.Index, this.Appearance.Legs.Texture);
-			Game.Player.Character.Style[PedComponents.Hands].SetVariation(this.Appearance.Hands.Index, this.Appearance.Hands.Texture);
-			Game.Player.Character.Style[PedComponents.Shoes].SetVariation(this.Appearance.Shoes.Index, this.Appearance.Shoes.Texture);
-			Game.Player.Character.Style[PedComponents.Special1].SetVariation(this.Appearance.Special1.Index, this.Appearance.Special1.Texture);
-			Game.Player.Character.Style[PedComponents.Special2].SetVariation(this.Appearance.Special2.Index, this.Appearance.Special2.Texture);
-			Game.Player.Character.Style[PedComponents.Special3].SetVariation(this.Appearance.Special3.Index, this.Appearance.Special3.Texture);
-			Game.Player.Character.Style[PedComponents.Textures].SetVariation(this.Appearance.Textures.Index, this.Appearance.Textures.Texture);
-			Game.Player.Character.Style[PedComponents.Torso2].SetVariation(this.Appearance.Torso2.Index, this.Appearance.Torso2.Texture);
+			Game.Player.Character.Style[PedComponents.Hair].SetVariation(this.Apparel.Hair.Index, this.Apparel.Hair.Texture);
 
-			Game.Player.Character.Style[PedProps.Hats].SetVariation(this.Appearance.Hat.Index, this.Appearance.Hat.Texture);
-			Game.Player.Character.Style[PedProps.Glasses].SetVariation(this.Appearance.Glasses.Index, this.Appearance.Glasses.Texture);
-			Game.Player.Character.Style[PedProps.EarPieces].SetVariation(this.Appearance.EarPiece.Index, this.Appearance.EarPiece.Texture);
-			Game.Player.Character.Style[PedProps.Unknown3].SetVariation(this.Appearance.Unknown3.Index, this.Appearance.Unknown3.Texture);
-			Game.Player.Character.Style[PedProps.Unknown4].SetVariation(this.Appearance.Unknown4.Index, this.Appearance.Unknown4.Texture);
-			Game.Player.Character.Style[PedProps.Unknown5].SetVariation(this.Appearance.Unknown5.Index, this.Appearance.Unknown5.Texture);
-			Game.Player.Character.Style[PedProps.Watches].SetVariation(this.Appearance.Watch.Index, this.Appearance.Watch.Texture);
-			Game.Player.Character.Style[PedProps.Wristbands].SetVariation(this.Appearance.Wristband.Index, this.Appearance.Wristband.Texture);
-			Game.Player.Character.Style[PedProps.Unknown8].SetVariation(this.Appearance.Unknown8.Index, this.Appearance.Unknown8.Texture);
-			Game.Player.Character.Style[PedProps.Unknown9].SetVariation(this.Appearance.Unknown9.Index, this.Appearance.Unknown9.Texture);
+			Game.Player.Character.Style[PedComponents.Torso].SetVariation(this.Apparel.Torso.Index, this.Apparel.Torso.Texture);
+			Game.Player.Character.Style[PedComponents.Legs].SetVariation(this.Apparel.Legs.Index, this.Apparel.Legs.Texture);
+			Game.Player.Character.Style[PedComponents.Hands].SetVariation(this.Apparel.Hands.Index, this.Apparel.Hands.Texture);
+			Game.Player.Character.Style[PedComponents.Shoes].SetVariation(this.Apparel.Shoes.Index, this.Apparel.Shoes.Texture);
+			Game.Player.Character.Style[PedComponents.Special1].SetVariation(this.Apparel.Special1.Index, this.Apparel.Special1.Texture);
+			Game.Player.Character.Style[PedComponents.Special2].SetVariation(this.Apparel.Special2.Index, this.Apparel.Special2.Texture);
+			Game.Player.Character.Style[PedComponents.Special3].SetVariation(this.Apparel.Special3.Index, this.Apparel.Special3.Texture);
+			Game.Player.Character.Style[PedComponents.Textures].SetVariation(this.Apparel.Textures.Index, this.Apparel.Textures.Texture);
+			Game.Player.Character.Style[PedComponents.Torso2].SetVariation(this.Apparel.Torso2.Index, this.Apparel.Torso2.Texture);
+
+			Game.Player.Character.Style[PedProps.Hats].SetVariation(this.Apparel.Hat.Index, this.Apparel.Hat.Texture);
+			Game.Player.Character.Style[PedProps.Glasses].SetVariation(this.Apparel.Glasses.Index, this.Apparel.Glasses.Texture);
+			Game.Player.Character.Style[PedProps.EarPieces].SetVariation(this.Apparel.EarPiece.Index, this.Apparel.EarPiece.Texture);
+			Game.Player.Character.Style[PedProps.Unknown3].SetVariation(this.Apparel.Unknown3.Index, this.Apparel.Unknown3.Texture);
+			Game.Player.Character.Style[PedProps.Unknown4].SetVariation(this.Apparel.Unknown4.Index, this.Apparel.Unknown4.Texture);
+			Game.Player.Character.Style[PedProps.Unknown5].SetVariation(this.Apparel.Unknown5.Index, this.Apparel.Unknown5.Texture);
+			Game.Player.Character.Style[PedProps.Watches].SetVariation(this.Apparel.Watch.Index, this.Apparel.Watch.Texture);
+			Game.Player.Character.Style[PedProps.Wristbands].SetVariation(this.Apparel.Wristband.Index, this.Apparel.Wristband.Texture);
+			Game.Player.Character.Style[PedProps.Unknown8].SetVariation(this.Apparel.Unknown8.Index, this.Apparel.Unknown8.Texture);
+			Game.Player.Character.Style[PedProps.Unknown9].SetVariation(this.Apparel.Unknown9.Index, this.Apparel.Unknown9.Texture);
 		}
 
 		public void SetComponent(int type, int index, int texture)
@@ -76,7 +157,7 @@ namespace IgiCore.Characters.Client.Models
 			Game.Player.Character.Style[componentType].Index = index;
 			Game.Player.Character.Style[componentType].TextureIndex = texture;
 
-			this.Appearance = ConvertStyle(Game.Player.Character.Style, this.Appearance.Id);
+			this.Apparel = ConvertStyle(Game.Player.Character.Style, this.Apparel.Id);
 		}
 
 		public void SetProp(int type, int index, int texture)
@@ -85,12 +166,12 @@ namespace IgiCore.Characters.Client.Models
 			Game.Player.Character.Style[propType].Index = index;
 			Game.Player.Character.Style[propType].TextureIndex = texture;
 
-			this.Appearance = ConvertStyle(Game.Player.Character.Style, this.Appearance.Id);
+			this.Apparel = ConvertStyle(Game.Player.Character.Style, this.Apparel.Id);
 		}
 
-		protected static Appearance ConvertStyle(Style style, Guid? id = null)
+		protected static Apparel ConvertStyle(Style style, Guid? id = null)
 		{
-			return new Appearance
+			return new Apparel
 			{
 				Id = id ?? GuidGenerator.GenerateTimeBasedGuid(),
 				Face = new Component

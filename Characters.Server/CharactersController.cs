@@ -173,6 +173,7 @@ namespace IgiCore.Characters.Server
 			character.Ssn = Character.GenerateSsn();
 			character.LastPlayed = DateTime.UtcNow;
 			character.Position = new Position(0f, 0f, 71f);
+			character.Apparel = new Apparel();
 			character.Appearance = new Appearance();
 
 			// Save character
