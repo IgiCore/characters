@@ -13,14 +13,14 @@ namespace IgiCore.Characters.Shared.Models
 		float EyesWidth { get; set; }
 		float Lips { get; set; }
 
-		Position Brows { get; set; }
-		Position CheekBones { get; set; }
-		Position ChinProfile { get; set; }
-		Position ChinShape { get; set; }
-		Position Jaw { get; set; }
-		Position Nose { get; set; }
-		Position NoseProfile { get; set; }
-		Position NoseTip { get; set; }
+		FeaturePointF Brows { get; set; }
+		FeaturePointF CheekBones { get; set; }
+		FeaturePointF ChinProfile { get; set; }
+		FeaturePointF ChinShape { get; set; }
+		FeaturePointF Jaw { get; set; }
+		FeaturePointF Nose { get; set; }
+		FeaturePointF NoseProfile { get; set; }
+		FeaturePointF NoseTip { get; set; }
 		
 		Feature Age { get; set; }
 		Feature Beard { get; set; }

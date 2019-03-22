@@ -53,6 +53,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterEvents.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Models\Appearance\Feature.cs" />
     <Compile Include="Models\Appearance\FeatureColorTypes.cs" />
     <Compile Include="Models\Appearance\FeatureTypes.cs" />
+    <Compile Include="Models\FeaturePointF.cs" />
     <Compile Include="Models\IAppearance.cs" />
     <Compile Include="Models\IHeritage.cs" />
     <Compile Include="Models\Apparel\Component.cs" />

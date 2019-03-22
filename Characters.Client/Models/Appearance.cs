@@ -1,6 +1,5 @@
 using IgiCore.Characters.Shared.Models;
 using IgiCore.Characters.Shared.Models.Appearance;
-using NFive.SDK.Core.Models;
 using System;
 
 namespace IgiCore.Characters.Client.Models
@@ -19,14 +18,14 @@ namespace IgiCore.Characters.Client.Models
 		public float EyesWidth { get; set; }
 		public float Lips { get; set; }
 
-		public Position Brows { get; set; }
-		public Position CheekBones { get; set; }
-		public Position ChinProfile { get; set; }
-		public Position ChinShape { get; set; }
-		public Position Jaw { get; set; }
-		public Position Nose { get; set; }
-		public Position NoseProfile { get; set; }
-		public Position NoseTip { get; set; }
+		public FeaturePointF Brows { get; set; }
+		public FeaturePointF CheekBones { get; set; }
+		public FeaturePointF ChinProfile { get; set; }
+		public FeaturePointF ChinShape { get; set; }
+		public FeaturePointF Jaw { get; set; }
+		public FeaturePointF Nose { get; set; }
+		public FeaturePointF NoseProfile { get; set; }
+		public FeaturePointF NoseTip { get; set; }
 
 		public Feature Age { get; set; }
 		public Feature Beard { get; set; }
