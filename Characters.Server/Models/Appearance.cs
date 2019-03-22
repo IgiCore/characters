@@ -11,19 +11,6 @@ namespace IgiCore.Characters.Server.Models
 		public int HairColorId { get; set; }
 		public int HairHighlightColor { get; set; }
 
-		public float Cheeks { get; set; }
-		public float EyesWidth { get; set; }
-		public float Lips { get; set; }
-
-		public FeaturePointF Brows { get; set; }
-		public FeaturePointF CheekBones { get; set; }
-		public FeaturePointF ChinProfile { get; set; }
-		public FeaturePointF ChinShape { get; set; }
-		public FeaturePointF Jaw { get; set; }
-		public FeaturePointF Nose { get; set; }
-		public FeaturePointF NoseProfile { get; set; }
-		public FeaturePointF NoseTip { get; set; }
-
 		public Feature Ageing { get; set; }
 		public Feature Beard { get; set; }
 		public Feature Blush { get; set; }
@@ -40,15 +27,6 @@ namespace IgiCore.Characters.Server.Models
 		{
 			this.Id = GuidGenerator.GenerateTimeBasedGuid();
 
-			this.Brows = new FeaturePointF();
-			this.CheekBones = new FeaturePointF();
-			this.ChinProfile = new FeaturePointF();
-			this.ChinShape = new FeaturePointF();
-			this.Jaw = new FeaturePointF();
-			this.Nose = new FeaturePointF();
-			this.NoseProfile = new FeaturePointF();
-			this.NoseTip = new FeaturePointF();
-
 			this.Ageing = new Feature();
 			this.Beard = new Feature();
 			this.Blemishes = new Feature();
@@ -61,7 +39,5 @@ namespace IgiCore.Characters.Server.Models
 			this.MolesAndFreckles = new Feature();
 			this.SunDamage = new Feature();
 		}
-
-		
 	}
 }

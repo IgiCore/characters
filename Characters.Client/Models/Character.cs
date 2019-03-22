@@ -99,12 +99,6 @@ namespace IgiCore.Characters.Client.Models
 
 		}
 
-
-
-
-
-
-
 		public void Render(ILogger logger)
 		{
 			// Apperantly this _must_ be called
