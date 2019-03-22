@@ -31,6 +31,8 @@ namespace IgiCore.Characters.Client.Models
 		public Apparel Apparel { get; set; }
 		public Guid AppearanceId { get; set; }
 		public Appearance Appearance { get; set; }
+		public Guid HeritageId { get; set; }
+		public Heritage Heritage { get; set; }
 		public DateTime? LastPlayed { get; set; }
 		public Guid UserId { get; set; }
 
@@ -42,73 +44,33 @@ namespace IgiCore.Characters.Client.Models
 		public void RenderCustom()
 		{
 			var player = Game.Player.Character.Handle;
-			//https://gtaforums.com/topic/858970-all-gtao-face-ids-pedset_ped_head_blend_data-explained/
-			//https://wiki.gt-mp.net/index.php/Character_Components
 
-			API.SetPedHeadBlendData(player, 0,21,0, 0, 0, 0, 0.5f, 0.5f, 0.5f, true);
+			// https://gtaforums.com/topic/858970-all-gtao-face-ids-pedset_ped_head_blend_data-explained/
+			// https://wiki.gt-mp.net/index.php/Character_Components
+			// https://wiki.gt-mp.net/index.php?title=Hair_Colors
 
-			// Hair Color https://wiki.gt-mp.net/index.php?title=Hair_Colors
+			API.SetPedHeadBlendData(player, this.Heritage.Mother,this.Heritage.Father,0, this.Heritage.Mother, this.Heritage.Father, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
+
+			
 			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
-
-			// Age & Opacity
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Age.Index, this.Appearance.Age.Opacity);
-
-			// Beard & Opcacity
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
-
-			// Eye color
 			API.SetPedEyeColor(player, this.Appearance.EyeColorId);
-
-			// EyeBrows & Opacity
-			API.SetPedHeadOverlay(player, 2, 0, 0f);
-
-			// Make up & Opacity
-			API.SetPedHeadOverlay(player, 4, 0, 0f);
-
-			// Lipstick
-			API.SetPedHeadOverlay(player, 8, 0, 0f);
-
-			// Hair
-			//API.SetPedComponentVariation(player, 2, 0, 0, 0);
-
-			// Beard Color
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Eyebrows, this.Appearance.Eyebrows.Index, this.Appearance.Eyebrows.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Makeup, this.Appearance.Makeup.Index, this.Appearance.Makeup.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Lipstick, this.Appearance.Lipstick.Index, this.Appearance.Lipstick.Opacity);
 			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Beard, (int)this.Appearance.Beard.ColorType, this.Appearance.Beard.ColorId, this.Appearance.Beard.SecondColorId);
-
-			// EyeBrows Color
-			API.SetPedHeadOverlayColor(player, 2, 0,0,0);
-
-			// Make up Color
-			API.SetPedHeadOverlayColor(player, 4, 1,0,0);
-
-			// Lipstick Color
-			API.SetPedHeadOverlayColor(player, 8,1,0,0);
-
-			// Blush & Opacity
-			API.SetPedHeadOverlay(player, 5, 0, 0f);
-
-			// Blush Color
-			API.SetPedHeadOverlayColor(player, 5, 2, 0,0);
-
-			// Complexion
-			API.SetPedHeadOverlay(player, 6, 0,0f);
-
-			// Sun Damage
-			API.SetPedHeadOverlay(player, 7, 0, 0f);
-
-			// Moles & Freckles
-			API.SetPedHeadOverlay(player, 9, 0, 0f);
-
-			// ChestHair & Opacity
-			API.SetPedHeadOverlay(player, 10, 0, 0f);
-
-			// Torso Color
-			API.SetPedHeadOverlayColor(player, 10, 1, 0,0);
-
-			// Body Blemishes & Opacity
-			API.SetPedHeadOverlay(player, 11,0,0f);
-
-			API.SetPedFaceFeature(player,0,0f);
-
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Eyebrows, (int)this.Appearance.Eyebrows.ColorType, this.Appearance.Eyebrows.ColorId, this.Appearance.Eyebrows.SecondColorId);
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Makeup, (int)this.Appearance.Makeup.ColorType, this.Appearance.Makeup.ColorId, this.Appearance.Makeup.SecondColorId);
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Lipstick, (int)this.Appearance.Lipstick.ColorType, this.Appearance.Lipstick.ColorId, this.Appearance.Lipstick.SecondColorId);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Blush, this.Appearance.Blush.Index, this.Appearance.Blush.Opacity);
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Blush, (int)this.Appearance.Blush.ColorType, this.Appearance.Blush.ColorId, this.Appearance.Blush.SecondColorId);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Complexion, this.Appearance.Complexion.Index, this.Appearance.Complexion.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.SunDamage, this.Appearance.SunDamage.Index, this.Appearance.SunDamage.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.MolesAndFreckles, this.Appearance.MolesAndFreckles.Index, this.Appearance.MolesAndFreckles.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Chest, this.Appearance.Chest.Index, this.Appearance.Chest.Opacity);
+			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Chest, (int)this.Appearance.Chest.ColorType, this.Appearance.Chest.ColorId, this.Appearance.Chest.SecondColorId);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Blemishes, this.Appearance.Blemishes.Index, this.Appearance.Blemishes.Opacity);
 		}
 
 

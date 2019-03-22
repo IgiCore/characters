@@ -158,6 +158,12 @@ namespace IgiCore.Characters.Server.Models
 
 		public virtual Appearance Appearance { get; set; }
 
+		[Required]
+		[ForeignKey("Heritage")]
+		public Guid HeritageId { get; set; }
+
+		public virtual Heritage Heritage { get; set; }
+
 		/// <inheritdoc />
 		/// <summary>
 		/// Gets or sets the timestamp of when the character was created.

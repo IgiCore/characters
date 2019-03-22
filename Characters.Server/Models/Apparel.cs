@@ -1,10 +1,11 @@
+using IgiCore.Characters.Shared.Models;
 using IgiCore.Characters.Shared.Models.Apparel;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 
 namespace IgiCore.Characters.Server.Models
 {
-	public class Apparel : IdentityModel
+	public class Apparel : IdentityModel, IApparel
 	{
 		public Component Face { get; set; }
 		public Component Head { get; set; }

@@ -90,12 +90,13 @@
     <Compile Include="CharacterManager.cs" />
     <Compile Include="Events\CharacterEventArgs.cs" />
     <Compile Include="Events\CharacterSessionEventArgs.cs" />
-    <Compile Include="Migrations\201903220043531_Init.cs" />
+    <Compile Include="Migrations\201903220528015_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Appearance.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Apparel.cs" />
     <Compile Include="Models\CharacterSession.cs" />
+    <Compile Include="Models\Heritage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CharactersController.cs" />
     <Compile Include="Storage\StorageContext.cs" />

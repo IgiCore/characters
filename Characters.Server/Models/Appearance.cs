@@ -38,18 +38,6 @@ namespace IgiCore.Characters.Server.Models
 			this.Makeup = new Feature();
 			this.MolesAndFreckles = new Feature();
 			this.SunDamage = new Feature();
-
-			//this.Age = new Feature(FeatureTypes.Age, FeatureColorTypes.Misc);
-			//this.Beard = new Feature(FeatureTypes.Beard, FeatureColorTypes.Beards);
-			//this.Blemishes = new Feature(FeatureTypes.Blemishes, FeatureColorTypes.Misc);
-			//this.Blush = new Feature(FeatureTypes.Blush, FeatureColorTypes.Blush);
-			//this.Chest = new Feature(FeatureTypes.Chest, FeatureColorTypes.Chest);
-			//this.Complexion = new Feature(FeatureTypes.Complexion, FeatureColorTypes.Misc);
-			//this.Eyebrows = new Feature(FeatureTypes.Eyebrows, FeatureColorTypes.EyeBrows);
-			//this.Lipstick = new Feature(FeatureTypes.Lipstick, FeatureColorTypes.Lipstick);
-			//this.Makeup = new Feature(FeatureTypes.Makeup, FeatureColorTypes.Misc);
-			//this.MolesAndFreckles = new Feature(FeatureTypes.MolesAndFreckles, FeatureColorTypes.Misc);
-			//this.SunDamage = new Feature(FeatureTypes.SunDamage, FeatureColorTypes.Misc);
 		}
 	}
 }

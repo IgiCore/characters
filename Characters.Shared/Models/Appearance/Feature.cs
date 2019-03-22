@@ -1,6 +1,3 @@
-using System.Linq.Expressions;
-using JetBrains.Annotations;
-
 namespace IgiCore.Characters.Shared.Models.Appearance
 {
 	public class Feature
@@ -16,11 +13,5 @@ namespace IgiCore.Characters.Shared.Models.Appearance
 		public int ColorId { get; set; }
 
 		public int SecondColorId { get; set; }
-
-		//public Feature(FeatureTypes featureType = FeatureTypes.Age, FeatureColorTypes featureColorType = FeatureColorTypes.Misc)
-		//{
-		//	this.Type = featureType;
-		//	this.ColorType = featureColorType;
-		//}
 	}
 }

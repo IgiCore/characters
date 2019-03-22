@@ -1,6 +1,8 @@
+using NFive.SDK.Core.Models;
+
 namespace IgiCore.Characters.Shared.Models
 {
-	public interface IHeritage
+	public interface IHeritage : IIdentityModel
 	{
 		int Mother { get; set; }			//21
 		int Father { get; set; }			//0

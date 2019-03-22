@@ -1,6 +1,6 @@
 namespace IgiCore.Characters.Shared.Models.Appearance
 {
-	public enum FeatureTypes
+	public enum FeatureTypes : int
 	{
 		Beard = 1,
 		Eyebrows = 2,
