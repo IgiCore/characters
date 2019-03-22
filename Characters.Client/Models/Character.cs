@@ -1,14 +1,13 @@
 using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using IgiCore.Characters.Shared.Models;
+using IgiCore.Characters.Shared.Models.Apparel;
+using IgiCore.Characters.Shared.Models.Appearance;
 using Newtonsoft.Json;
 using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using CitizenFX.Core.Native;
-using IgiCore.Characters.Shared.Models.Apparel;
-using IgiCore.Characters.Shared.Models.Appearance;
 using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -43,6 +42,9 @@ namespace IgiCore.Characters.Client.Models
 
 		public void RenderCustom()
 		{
+			// Only for FreeMode models
+			if (this.ModelHash != PedHash.FreemodeMale01 || this.ModelHash != PedHash.FreemodeFemale01) return;
+
 			var player = Game.Player.Character.Handle;
 
 			// https://gtaforums.com/topic/858970-all-gtao-face-ids-pedset_ped_head_blend_data-explained/
@@ -51,7 +53,6 @@ namespace IgiCore.Characters.Client.Models
 
 			API.SetPedHeadBlendData(player, this.Heritage.Mother,this.Heritage.Father,0, this.Heritage.Mother, this.Heritage.Father, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
 
-			
 			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Age.Index, this.Appearance.Age.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
