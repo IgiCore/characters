@@ -43,6 +43,10 @@
     </ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CitizenFX.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CitizenFX.Client.1.3.0.1130210\lib\net452\CitizenFX.Core.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>False</Private>
@@ -90,7 +94,7 @@
     <Compile Include="CharacterManager.cs" />
     <Compile Include="Events\CharacterEventArgs.cs" />
     <Compile Include="Events\CharacterSessionEventArgs.cs" />
-    <Compile Include="Migrations\201903220528015_Init.cs" />
+    <Compile Include="Migrations\201903220828354_Init.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Appearance.cs" />
     <Compile Include="Models\Character.cs" />
