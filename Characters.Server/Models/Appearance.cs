@@ -24,7 +24,7 @@ namespace IgiCore.Characters.Server.Models
 		public FeaturePointF NoseProfile { get; set; }
 		public FeaturePointF NoseTip { get; set; }
 
-		public Feature Age { get; set; }
+		public Feature Ageing { get; set; }
 		public Feature Beard { get; set; }
 		public Feature Blush { get; set; }
 		public Feature Blemishes { get; set; }
@@ -49,7 +49,7 @@ namespace IgiCore.Characters.Server.Models
 			this.NoseProfile = new FeaturePointF();
 			this.NoseTip = new FeaturePointF();
 
-			this.Age = new Feature();
+			this.Ageing = new Feature();
 			this.Beard = new Feature();
 			this.Blemishes = new Feature();
 			this.Blush = new Feature();

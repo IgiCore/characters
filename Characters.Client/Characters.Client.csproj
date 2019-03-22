@@ -64,6 +64,7 @@
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Apparel.cs" />
     <Compile Include="Models\CharacterSession.cs" />
+    <Compile Include="Models\FaceShape.cs" />
     <Compile Include="Models\Heritage.cs" />
     <Compile Include="Overlays\CharacterOverlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

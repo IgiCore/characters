@@ -175,6 +175,7 @@ namespace IgiCore.Characters.Server
 			character.Position = new Position(0f, 0f, 71f);
 			character.Apparel = new Apparel();
 			character.Appearance = new Appearance();
+			character.FaceShape = new FaceShape();
 			character.Heritage = new Heritage();
 
 			// Save character

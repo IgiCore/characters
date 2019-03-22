@@ -159,6 +159,13 @@ namespace IgiCore.Characters.Server.Models
 		public virtual Appearance Appearance { get; set; }
 
 		[Required]
+		[ForeignKey("FaceShape")]
+		public Guid FaceShapeId { get; set; }
+
+		public virtual FaceShape FaceShape { get; set; }
+
+
+		[Required]
 		[ForeignKey("Heritage")]
 		public Guid HeritageId { get; set; }
 

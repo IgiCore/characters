@@ -8,6 +8,7 @@ using NFive.SDK.Client.Extensions;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
+using NFive.SDK.Core.Diagnostics;
 using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -30,6 +31,8 @@ namespace IgiCore.Characters.Client.Models
 		public Apparel Apparel { get; set; }
 		public Guid AppearanceId { get; set; }
 		public Appearance Appearance { get; set; }
+		public Guid FaceShapeId { get; set; }
+		public FaceShape FaceShape { get; set; }
 		public Guid HeritageId { get; set; }
 		public Heritage Heritage { get; set; }
 		public DateTime? LastPlayed { get; set; }
@@ -40,10 +43,10 @@ namespace IgiCore.Characters.Client.Models
 		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
 
 
-		public void RenderCustom()
+		public void RenderCustom(ILogger logger)
 		{
 			// Only for FreeMode models
-			if (this.ModelHash != PedHash.FreemodeMale01 || this.ModelHash != PedHash.FreemodeFemale01) return;
+			if (this.ModelHash != PedHash.FreemodeMale01 && this.ModelHash != PedHash.FreemodeFemale01) return;
 
 			var player = Game.Player.Character.Handle;
 
@@ -54,7 +57,7 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedHeadBlendData(player, this.Heritage.Mother,this.Heritage.Father,0, this.Heritage.Mother, this.Heritage.Father, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
 
 			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
-			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Age.Index, this.Appearance.Age.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Ageing.Index, this.Appearance.Ageing.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
 			API.SetPedEyeColor(player, this.Appearance.EyeColorId);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Eyebrows, this.Appearance.Eyebrows.Index, this.Appearance.Eyebrows.Opacity);
@@ -72,6 +75,28 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Chest, this.Appearance.Chest.Index, this.Appearance.Chest.Opacity);
 			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Chest, (int)this.Appearance.Chest.ColorType, this.Appearance.Chest.ColorId, this.Appearance.Chest.SecondColorId);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Blemishes, this.Appearance.Blemishes.Index, this.Appearance.Blemishes.Opacity);
+
+			API.SetPedFaceFeature(player, 0, this.FaceShape.NoseWidth);
+			API.SetPedFaceFeature(player, 1, this.FaceShape.NosePeakHeight);
+			API.SetPedFaceFeature(player, 2, this.FaceShape.NosePeakLength);
+			API.SetPedFaceFeature(player, 3, this.FaceShape.NoseBoneHeight);
+			API.SetPedFaceFeature(player, 4, this.FaceShape.NosePeakLowering);
+			API.SetPedFaceFeature(player, 5, this.FaceShape.NoseBoneTwist);
+			API.SetPedFaceFeature(player, 6, this.FaceShape.EyeBrowHeight);
+			API.SetPedFaceFeature(player, 7, this.FaceShape.EyeBrowLength);
+			API.SetPedFaceFeature(player, 8, this.FaceShape.CheekBoneHeight);
+			API.SetPedFaceFeature(player, 9, this.FaceShape.CheekBoneWidth);
+			API.SetPedFaceFeature(player, 10, this.FaceShape.CheekWidth);
+			API.SetPedFaceFeature(player, 11, this.FaceShape.EyeOpenings);
+			API.SetPedFaceFeature(player, 12, this.FaceShape.LipThickness);
+			API.SetPedFaceFeature(player, 13, this.FaceShape.JawBoneWidth);
+			API.SetPedFaceFeature(player, 14, this.FaceShape.JawBoneLength);
+			API.SetPedFaceFeature(player, 15, this.FaceShape.ChinBoneLowering);
+			API.SetPedFaceFeature(player, 16, this.FaceShape.ChinBoneLength);
+			API.SetPedFaceFeature(player, 17, this.FaceShape.ChinBoneWidth);
+			API.SetPedFaceFeature(player, 18, this.FaceShape.ChinDimple);
+			API.SetPedFaceFeature(player, 19, this.FaceShape.NeckThickness);
+
 		}
 
 
@@ -80,7 +105,7 @@ namespace IgiCore.Characters.Client.Models
 
 
 
-		public void Render()
+		public void Render(ILogger logger)
 		{
 			// Apperantly this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
