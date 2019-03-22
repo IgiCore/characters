@@ -128,7 +128,8 @@ namespace IgiCore.Characters.Client
 
 			// Load and render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
-			character.Render();
+			character.RenderCustom(this.Logger);
+			character.Render(this.Logger);
 
 			// Unfreeze
 			Game.Player.Unfreeze();

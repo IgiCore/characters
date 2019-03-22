@@ -147,10 +147,29 @@ namespace IgiCore.Characters.Server.Models
 		public string WalkingStyle { get; set; }
 
 		[Required]
+		[ForeignKey("Apparel")]
+		public Guid ApparelId { get; set; }
+
+		public virtual Apparel Apparel { get; set; }
+
+		[Required]
 		[ForeignKey("Appearance")]
 		public Guid AppearanceId { get; set; }
 
 		public virtual Appearance Appearance { get; set; }
+
+		[Required]
+		[ForeignKey("FaceShape")]
+		public Guid FaceShapeId { get; set; }
+
+		public virtual FaceShape FaceShape { get; set; }
+
+
+		[Required]
+		[ForeignKey("Heritage")]
+		public Guid HeritageId { get; set; }
+
+		public virtual Heritage Heritage { get; set; }
 
 		/// <inheritdoc />
 		/// <summary>
