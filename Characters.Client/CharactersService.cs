@@ -96,7 +96,7 @@ namespace IgiCore.Characters.Client
 			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
 
 			e.Character.WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK";
-			e.Character.Model = ((uint)PedHash.FreemodeMale01).ToString();
+			e.Character.Model = ((uint)(e.Character.Gender == 0 ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01)).ToString();
 
 			// Send new character
 			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
