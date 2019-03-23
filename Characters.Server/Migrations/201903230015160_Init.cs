@@ -8,10 +8,10 @@ using System.Data.Entity.Migrations.Infrastructure;
 
 namespace IgiCore.Characters.Server.Migrations
 {
-    [GeneratedCode("NFive.Migration", "0.3 Alpha Build 148")]
+    [GeneratedCode("NFive.Migration", "0.3 Alpha Build 152")]
     public class Init : DbMigration, IMigrationMetadata
     {
-        string IMigrationMetadata.Id => "201903222156468_Init";
+        string IMigrationMetadata.Id => "201903230015160_Init";
         
         string IMigrationMetadata.Source => null;
         
@@ -271,7 +271,6 @@ namespace IgiCore.Characters.Server.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Characters", t => t.CharacterId, cascadeDelete: true)
                 .Index(t => t.CharacterId);
-            
         }
         
         public override void Down()
