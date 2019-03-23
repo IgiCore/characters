@@ -22,6 +22,7 @@ namespace IgiCore.Characters.Client
 	[PublicAPI]
 	public class CharactersService : Service
 	{
+		private bool started = false;
 		private bool isPlaying;
 		private Configuration config;
 		private CharacterOverlay overlay;
@@ -34,7 +35,10 @@ namespace IgiCore.Characters.Client
 		{
 			// Request server configuration
 			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
+		}
 
+		public override async Task HoldFocus()
+		{
 			// Hide HUD
 			Screen.Hud.IsVisible = false;
 
@@ -82,6 +86,9 @@ namespace IgiCore.Characters.Client
 			// Fade in
 			Screen.Fading.FadeIn(500);
 			while (Screen.Fading.IsFadingIn) await Delay(10);
+
+			// Wait for user before releasing focus
+			while (!this.started) await Delay(20);
 		}
 
 		private async void OnCreate(object sender, CreateOverlayEventArgs e)
@@ -153,6 +160,9 @@ namespace IgiCore.Characters.Client
 			// to reduce character select click lag
 			this.Ticks.Attach(OnSaveCharacter);
 			this.Ticks.Attach(OnSavePosition);
+
+			// Release focus hold
+			this.started = true;
 		}
 
 		public async Task OnSaveCharacter()
