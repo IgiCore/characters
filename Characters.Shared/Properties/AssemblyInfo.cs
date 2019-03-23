@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IgiCore")]
 [assembly: AssemblyProduct("IgiCore Characters Shared Library")]
-[assembly: AssemblyCopyright("Copyright © IgiCore 2018")]
+[assembly: AssemblyCopyright("Copyright © IgiCore 2018-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

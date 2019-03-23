@@ -9,7 +9,7 @@ using NFive.SDK.Client;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IgiCore")]
 [assembly: AssemblyProduct("IgiCore Characters Client Plugin")]
-[assembly: AssemblyCopyright("Copyright © IgiCore 2018")]
+[assembly: AssemblyCopyright("Copyright © IgiCore 2018-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
