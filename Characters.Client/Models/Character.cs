@@ -5,10 +5,11 @@ using IgiCore.Characters.Shared.Models.Apparel;
 using IgiCore.Characters.Shared.Models.Appearance;
 using Newtonsoft.Json;
 using NFive.SDK.Client.Extensions;
+using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
-using NFive.SDK.Core.Diagnostics;
+using System.Threading.Tasks;
 using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
@@ -41,8 +42,7 @@ namespace IgiCore.Characters.Client.Models
 		[JsonIgnore] public string FullName => $"{this.Forename} {this.Middlename} {this.Surname}".Replace("  ", " ");
 
 		[JsonIgnore] public PedHash ModelHash => (PedHash)Convert.ToUInt32(this.Model);
-
-
+		
 		public void RenderCustom(ILogger logger)
 		{
 			// Only for FreeMode models
@@ -99,13 +99,16 @@ namespace IgiCore.Characters.Client.Models
 
 		}
 
-		public void Render(ILogger logger)
+		public async Task Render(ILogger logger)
 		{
 			// Apparently this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
 
 			Game.Player.Character.Position = this.Position.ToVector3();
 			Game.Player.Character.Armor = this.Armor;
+
+			API.RequestClipSet(this.WalkingStyle);
+			await BaseScript.Delay(100); // Required to load
 			Game.Player.Character.MovementAnimationSet = this.WalkingStyle;
 
 			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Apparel.Face.Index, this.Apparel.Face.Texture);

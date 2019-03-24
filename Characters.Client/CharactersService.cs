@@ -95,7 +95,7 @@ namespace IgiCore.Characters.Client
 		{
 			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
 
-			e.Character.WalkingStyle = "MOVE_M@DRUNK@VERYDRUNK";
+			e.Character.WalkingStyle = "move_m@drunk@verydrunk";
 			e.Character.Model = ((uint)(e.Character.Gender == 0 ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01)).ToString();
 
 			// Send new character
@@ -136,7 +136,7 @@ namespace IgiCore.Characters.Client
 			// Load and render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
 			character.RenderCustom(this.Logger);
-			character.Render(this.Logger);
+			await character.Render(this.Logger);
 
 			// Unfreeze
 			Game.Player.Unfreeze();
