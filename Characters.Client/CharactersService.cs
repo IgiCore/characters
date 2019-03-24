@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using NFive.SDK.Client.Commands;
 using NFive.SDK.Client.Events;
 using NFive.SDK.Client.Extensions;
+using NFive.SDK.Client.Input;
 using NFive.SDK.Client.Interface;
 using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
@@ -158,11 +159,58 @@ namespace IgiCore.Characters.Client
 
 			// Attach tick handlers after character selection
 			// to reduce character select click lag
+			this.Ticks.Attach(OnHotkey);
 			this.Ticks.Attach(OnSaveCharacter);
 			this.Ticks.Attach(OnSavePosition);
 
 			// Release focus hold
 			this.started = true;
+		}
+
+		public async Task OnHotkey()
+		{
+			if (!Input.IsControlJustPressed(Control.ReplayStartStopRecording)) return; // F1
+
+			// Hide HUD
+			Screen.Hud.IsVisible = false;
+
+			// Remove most clouds
+			API.SetCloudHatOpacity(0.01f);
+
+			// Switch out the player if it isn't already in a switch state
+			if (!API.IsPlayerSwitchInProgress()) API.SwitchOutPlayer(API.PlayerPedId(), 0, 1);
+
+			// Wait for switch
+			while (API.GetPlayerSwitchState() != 5) await Delay(10);
+			
+			// Freeze
+			Game.Player.Freeze();
+
+			// Fade out
+			Screen.Fading.FadeOut(1000);
+			while (Screen.Fading.IsFadingOut) await Delay(10);
+
+			// Position character, required for switching
+			Game.Player.Character.Position = Vector3.Zero;
+
+			// Get characters
+			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
+
+			// Show overlay
+			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
+			this.overlay.Create += OnCreate;
+			this.overlay.Disconnect += OnDisconnect;
+			this.overlay.Select += OnSelect;
+			this.overlay.Delete += OnDelete;
+			
+			// Focus overlay
+			API.SetNuiFocus(true, true);
+
+			// Fade in
+			Screen.Fading.FadeIn(500);
+			while (Screen.Fading.IsFadingIn) await Delay(10);
+
+			this.Ticks.Detach(OnHotkey);
 		}
 
 		public async Task OnSaveCharacter()
