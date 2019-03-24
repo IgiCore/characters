@@ -14,6 +14,7 @@ using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace IgiCore.Characters.Client
 		private bool started = false;
 		private bool isPlaying;
 		private Configuration config;
+		private Control activateKey;
 		private CharacterOverlay overlay;
 		private CharacterSession session;
 		private Character activeCharacter;
@@ -36,6 +38,8 @@ namespace IgiCore.Characters.Client
 		{
 			// Request server configuration
 			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
+
+			this.activateKey = (Control)Enum.Parse(typeof(Control), this.config.SelectionScreen.Hotkey, true);
 		}
 
 		public override async Task HoldFocus()
@@ -169,7 +173,7 @@ namespace IgiCore.Characters.Client
 
 		public async Task OnHotkey()
 		{
-			if (!Input.IsControlJustPressed(Control.ReplayStartStopRecording)) return; // F1
+			if (!Input.IsControlJustPressed(this.activateKey)) return;
 
 			// Set as playing
 			this.isPlaying = false;
@@ -220,14 +224,14 @@ namespace IgiCore.Characters.Client
 		{
 			SaveCharacter();
 
-			await Delay(this.config.CharacterSaveInterval);
+			await Delay(this.config.Autosave.CharacterInterval);
 		}
 
 		public async Task OnSavePosition()
 		{
 			SavePosition();
 
-			await Delay(this.config.PositionSaveInterval);
+			await Delay(this.config.Autosave.PositionInterval);
 		}
 
 		private void SaveCharacter()

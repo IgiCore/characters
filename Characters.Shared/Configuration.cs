@@ -5,8 +5,22 @@ namespace IgiCore.Characters.Shared
 {
 	public class Configuration : ControllerConfiguration
 	{
-		public TimeSpan CharacterSaveInterval { get; set; } = TimeSpan.FromMinutes(5);
+		public SelectionScreenConfiguration SelectionScreen { get; set; } = new SelectionScreenConfiguration();
 
-		public TimeSpan PositionSaveInterval { get; set; } = TimeSpan.FromMinutes(1);
+		public int MaximumCharacters { get; set; } = -1;
+
+		public AutosaveConfiguration Autosave { get; set; } = new AutosaveConfiguration();
+
+		public class AutosaveConfiguration
+		{
+			public TimeSpan CharacterInterval { get; set; } = TimeSpan.FromMinutes(5);
+
+			public TimeSpan PositionInterval { get; set; } = TimeSpan.FromMinutes(1);
+		}
+
+		public class SelectionScreenConfiguration
+		{
+			public string Hotkey { get; set; } = "ReplayStartStopRecording"; // Default to F1
+		}
 	}
 }
