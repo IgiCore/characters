@@ -171,6 +171,9 @@ namespace IgiCore.Characters.Client
 		{
 			if (!Input.IsControlJustPressed(Control.ReplayStartStopRecording)) return; // F1
 
+			// Set as playing
+			this.isPlaying = false;
+
 			// Hide HUD
 			Screen.Hud.IsVisible = false;
 
@@ -182,7 +185,7 @@ namespace IgiCore.Characters.Client
 
 			// Wait for switch
 			while (API.GetPlayerSwitchState() != 5) await Delay(10);
-			
+
 			// Freeze
 			Game.Player.Freeze();
 
@@ -202,7 +205,7 @@ namespace IgiCore.Characters.Client
 			this.overlay.Disconnect += OnDisconnect;
 			this.overlay.Select += OnSelect;
 			this.overlay.Delete += OnDelete;
-			
+
 			// Focus overlay
 			API.SetNuiFocus(true, true);
 
