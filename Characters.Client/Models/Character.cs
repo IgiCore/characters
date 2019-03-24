@@ -45,7 +45,7 @@ namespace IgiCore.Characters.Client.Models
 		
 		public void RenderCustom(ILogger logger)
 		{
-			// Only for FreeMode models
+			// Only for free mode models
 			if (this.ModelHash != PedHash.FreemodeMale01 && this.ModelHash != PedHash.FreemodeFemale01) return;
 
 			var player = Game.Player.Character.Handle;
@@ -54,7 +54,7 @@ namespace IgiCore.Characters.Client.Models
 			// https://wiki.gt-mp.net/index.php/Character_Components
 			// https://wiki.gt-mp.net/index.php?title=Hair_Colors
 
-			API.SetPedHeadBlendData(player, this.Heritage.Parent1,this.Heritage.Parent2,0, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
+			API.SetPedHeadBlendData(player, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
 
 			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Aging.Index, this.Appearance.Aging.Opacity);
@@ -96,7 +96,6 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedFaceFeature(player, 17, this.FaceShape.ChinBoneWidth);
 			API.SetPedFaceFeature(player, 18, this.FaceShape.ChinDimple);
 			API.SetPedFaceFeature(player, 19, this.FaceShape.NeckThickness);
-
 		}
 
 		public async Task Render(ILogger logger)
@@ -114,7 +113,7 @@ namespace IgiCore.Characters.Client.Models
 			Game.Player.Character.Style[PedComponents.Face].SetVariation(this.Apparel.Face.Index, this.Apparel.Face.Texture);
 			Game.Player.Character.Style[PedComponents.Head].SetVariation(this.Apparel.Head.Index, this.Apparel.Head.Texture);
 
-			// Temporary VisibilityFix Workaround
+			// Temporary network visibility fix workaround
 			Game.Player.Character.Style[PedComponents.Hair].SetVariation(1, 1);
 
 			Game.Player.Character.Style[PedComponents.Hair].SetVariation(this.Apparel.Hair.Index, this.Apparel.Hair.Texture);
@@ -141,163 +140,142 @@ namespace IgiCore.Characters.Client.Models
 			Game.Player.Character.Style[PedProps.Unknown9].SetVariation(this.Apparel.Unknown9.Index, this.Apparel.Unknown9.Texture);
 		}
 
-		public void SetComponent(int type, int index, int texture)
+		protected static Apparel ConvertStyle(Style style, Guid? id = null) => new Apparel
 		{
-			var componentType = (PedComponents)type;
-			Game.Player.Character.Style[componentType].Index = index;
-			Game.Player.Character.Style[componentType].TextureIndex = texture;
-
-			this.Apparel = ConvertStyle(Game.Player.Character.Style, this.Apparel.Id);
-		}
-
-		public void SetProp(int type, int index, int texture)
-		{
-			var propType = (PedProps)type;
-			Game.Player.Character.Style[propType].Index = index;
-			Game.Player.Character.Style[propType].TextureIndex = texture;
-
-			this.Apparel = ConvertStyle(Game.Player.Character.Style, this.Apparel.Id);
-		}
-
-		protected static Apparel ConvertStyle(Style style, Guid? id = null)
-		{
-			return new Apparel
+			Id = id ?? GuidGenerator.GenerateTimeBasedGuid(),
+			Face = new Component
 			{
-				Id = id ?? GuidGenerator.GenerateTimeBasedGuid(),
-				Face = new Component
-				{
-					Type = ComponentTypes.Face,
-					Index = style[PedComponents.Face].Index,
-					Texture = style[PedComponents.Face].TextureIndex
-				},
-				Head = new Component
-				{
-					Type = ComponentTypes.Head,
-					Index = style[PedComponents.Head].Index,
-					Texture = style[PedComponents.Head].TextureIndex
-				},
-				Hair = new Component
-				{
-					Type = ComponentTypes.Hair,
-					Index = style[PedComponents.Hair].Index,
-					Texture = style[PedComponents.Hair].TextureIndex
-				},
-				Torso = new Component
-				{
-					Type = ComponentTypes.Torso,
-					Index = style[PedComponents.Torso].Index,
-					Texture = style[PedComponents.Torso].TextureIndex
-				},
-				Legs = new Component
-				{
-					Type = ComponentTypes.Legs,
-					Index = style[PedComponents.Legs].Index,
-					Texture = style[PedComponents.Legs].TextureIndex
-				},
-				Hands = new Component
-				{
-					Type = ComponentTypes.Hands,
-					Index = style[PedComponents.Hands].Index,
-					Texture = style[PedComponents.Hands].TextureIndex
-				},
-				Shoes = new Component
-				{
-					Type = ComponentTypes.Shoes,
-					Index = style[PedComponents.Shoes].Index,
-					Texture = style[PedComponents.Shoes].TextureIndex
-				},
-				Special1 = new Component
-				{
-					Type = ComponentTypes.Special1,
-					Index = style[PedComponents.Special1].Index,
-					Texture = style[PedComponents.Special1].TextureIndex
-				},
-				Special2 = new Component
-				{
-					Type = ComponentTypes.Special2,
-					Index = style[PedComponents.Special2].Index,
-					Texture = style[PedComponents.Special2].TextureIndex
-				},
-				Special3 = new Component
-				{
-					Type = ComponentTypes.Special3,
-					Index = style[PedComponents.Special3].Index,
-					Texture = style[PedComponents.Special3].TextureIndex
-				},
-				Textures = new Component
-				{
-					Type = ComponentTypes.Textures,
-					Index = style[PedComponents.Textures].Index,
-					Texture = style[PedComponents.Textures].TextureIndex
-				},
-				Torso2 = new Component
-				{
-					Type = ComponentTypes.Torso2,
-					Index = style[PedComponents.Torso2].Index,
-					Texture = style[PedComponents.Torso2].TextureIndex
-				},
+				Type = ComponentTypes.Face,
+				Index = style[PedComponents.Face].Index,
+				Texture = style[PedComponents.Face].TextureIndex
+			},
+			Head = new Component
+			{
+				Type = ComponentTypes.Head,
+				Index = style[PedComponents.Head].Index,
+				Texture = style[PedComponents.Head].TextureIndex
+			},
+			Hair = new Component
+			{
+				Type = ComponentTypes.Hair,
+				Index = style[PedComponents.Hair].Index,
+				Texture = style[PedComponents.Hair].TextureIndex
+			},
+			Torso = new Component
+			{
+				Type = ComponentTypes.Torso,
+				Index = style[PedComponents.Torso].Index,
+				Texture = style[PedComponents.Torso].TextureIndex
+			},
+			Legs = new Component
+			{
+				Type = ComponentTypes.Legs,
+				Index = style[PedComponents.Legs].Index,
+				Texture = style[PedComponents.Legs].TextureIndex
+			},
+			Hands = new Component
+			{
+				Type = ComponentTypes.Hands,
+				Index = style[PedComponents.Hands].Index,
+				Texture = style[PedComponents.Hands].TextureIndex
+			},
+			Shoes = new Component
+			{
+				Type = ComponentTypes.Shoes,
+				Index = style[PedComponents.Shoes].Index,
+				Texture = style[PedComponents.Shoes].TextureIndex
+			},
+			Special1 = new Component
+			{
+				Type = ComponentTypes.Special1,
+				Index = style[PedComponents.Special1].Index,
+				Texture = style[PedComponents.Special1].TextureIndex
+			},
+			Special2 = new Component
+			{
+				Type = ComponentTypes.Special2,
+				Index = style[PedComponents.Special2].Index,
+				Texture = style[PedComponents.Special2].TextureIndex
+			},
+			Special3 = new Component
+			{
+				Type = ComponentTypes.Special3,
+				Index = style[PedComponents.Special3].Index,
+				Texture = style[PedComponents.Special3].TextureIndex
+			},
+			Textures = new Component
+			{
+				Type = ComponentTypes.Textures,
+				Index = style[PedComponents.Textures].Index,
+				Texture = style[PedComponents.Textures].TextureIndex
+			},
+			Torso2 = new Component
+			{
+				Type = ComponentTypes.Torso2,
+				Index = style[PedComponents.Torso2].Index,
+				Texture = style[PedComponents.Torso2].TextureIndex
+			},
 
-				Hat = new Prop
-				{
-					Type = PropTypes.Hats,
-					Index = style[PedProps.Hats].Index,
-					Texture = style[PedProps.Hats].TextureIndex
-				},
-				Glasses = new Prop
-				{
-					Type = PropTypes.Glasses,
-					Index = style[PedProps.Glasses].Index,
-					Texture = style[PedProps.Glasses].TextureIndex
-				},
-				EarPiece = new Prop
-				{
-					Type = PropTypes.EarPieces,
-					Index = style[PedProps.EarPieces].Index,
-					Texture = style[PedProps.EarPieces].TextureIndex
-				},
-				Unknown3 = new Prop
-				{
-					Type = PropTypes.Unknown3,
-					Index = style[PedProps.Unknown3].Index,
-					Texture = style[PedProps.Unknown3].TextureIndex
-				},
-				Unknown4 = new Prop
-				{
-					Type = PropTypes.Unknown4,
-					Index = style[PedProps.Unknown4].Index,
-					Texture = style[PedProps.Unknown4].TextureIndex
-				},
-				Unknown5 = new Prop
-				{
-					Type = PropTypes.Unknown5,
-					Index = style[PedProps.Unknown5].Index,
-					Texture = style[PedProps.Unknown5].TextureIndex
-				},
-				Watch = new Prop
-				{
-					Type = PropTypes.Watches,
-					Index = style[PedProps.Watches].Index,
-					Texture = style[PedProps.Watches].TextureIndex
-				},
-				Wristband = new Prop
-				{
-					Type = PropTypes.Wristbands,
-					Index = style[PedProps.Wristbands].Index,
-					Texture = style[PedProps.Wristbands].TextureIndex
-				},
-				Unknown8 = new Prop
-				{
-					Type = PropTypes.Unknown8,
-					Index = style[PedProps.Unknown8].Index,
-					Texture = style[PedProps.Unknown8].TextureIndex
-				},
-				Unknown9 = new Prop
-				{
-					Type = PropTypes.Unknown9,
-					Index = style[PedProps.Unknown9].Index,
-					Texture = style[PedProps.Unknown9].TextureIndex
-				}
-			};
-		}
+			Hat = new Prop
+			{
+				Type = PropTypes.Hats,
+				Index = style[PedProps.Hats].Index,
+				Texture = style[PedProps.Hats].TextureIndex
+			},
+			Glasses = new Prop
+			{
+				Type = PropTypes.Glasses,
+				Index = style[PedProps.Glasses].Index,
+				Texture = style[PedProps.Glasses].TextureIndex
+			},
+			EarPiece = new Prop
+			{
+				Type = PropTypes.EarPieces,
+				Index = style[PedProps.EarPieces].Index,
+				Texture = style[PedProps.EarPieces].TextureIndex
+			},
+			Unknown3 = new Prop
+			{
+				Type = PropTypes.Unknown3,
+				Index = style[PedProps.Unknown3].Index,
+				Texture = style[PedProps.Unknown3].TextureIndex
+			},
+			Unknown4 = new Prop
+			{
+				Type = PropTypes.Unknown4,
+				Index = style[PedProps.Unknown4].Index,
+				Texture = style[PedProps.Unknown4].TextureIndex
+			},
+			Unknown5 = new Prop
+			{
+				Type = PropTypes.Unknown5,
+				Index = style[PedProps.Unknown5].Index,
+				Texture = style[PedProps.Unknown5].TextureIndex
+			},
+			Watch = new Prop
+			{
+				Type = PropTypes.Watches,
+				Index = style[PedProps.Watches].Index,
+				Texture = style[PedProps.Watches].TextureIndex
+			},
+			Wristband = new Prop
+			{
+				Type = PropTypes.Wristbands,
+				Index = style[PedProps.Wristbands].Index,
+				Texture = style[PedProps.Wristbands].TextureIndex
+			},
+			Unknown8 = new Prop
+			{
+				Type = PropTypes.Unknown8,
+				Index = style[PedProps.Unknown8].Index,
+				Texture = style[PedProps.Unknown8].TextureIndex
+			},
+			Unknown9 = new Prop
+			{
+				Type = PropTypes.Unknown9,
+				Index = style[PedProps.Unknown9].Index,
+				Texture = style[PedProps.Unknown9].TextureIndex
+			}
+		};
 	}
 }

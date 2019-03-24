@@ -197,7 +197,9 @@ namespace IgiCore.Characters.Server.Models
 			do
 			{
 				ssn = rng.Next(1000000, 999999999);
-			} while (Regex.IsMatch(ssn.ToString(), "^(?!b(d)1+b)(?!123456789|219099999|078051120)(?!666|000|9d{2})d{3}(?!00)d{2}(?!0{4})d{4}$")); // Validate its a valid US SSN
+			} while (Regex.IsMatch(ssn.ToString(), "^(?!b(d)1+b)(?!123456789|219099999|078051120)(?!666|000|9d{2})d{3}(?!00)d{2}(?!0{4})d{4}$")); // Validate its a valid USA SSN
+
+			// TODO: Validate SSN isn't already used
 
 			return ssn;
 		}

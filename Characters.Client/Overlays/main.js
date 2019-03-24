@@ -7,6 +7,7 @@ Vue.config.devtools = true
 
 Vue.use(Vuex)
 
+// ReSharper disable once ConstructorCallNotUsed
 new Vue({
 	el: 'main',
 
