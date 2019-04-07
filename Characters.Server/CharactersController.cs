@@ -12,6 +12,7 @@ using NFive.SDK.Server.Rpc;
 using NFive.SDK.Server.Wrappers;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -120,7 +121,7 @@ namespace IgiCore.Characters.Server
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
 			{
-				var character = context.Characters.FirstOrDefault(c => c.Id == id);
+				var character = context.Characters.Include(c => c.User).FirstOrDefault(c => c.Id == id);
 
 				if (character == null)
 				{
@@ -133,8 +134,9 @@ namespace IgiCore.Characters.Server
 				{
 					Id = GuidGenerator.GenerateTimeBasedGuid(),
 					CharacterId = character.Id,
+					Character = character,
 					Created = DateTime.UtcNow,
-					Connected = DateTime.UtcNow
+					Connected = DateTime.UtcNow,
 				};
 
 				context.CharacterSessions.Add(newSession);
