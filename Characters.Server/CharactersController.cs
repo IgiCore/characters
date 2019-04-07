@@ -144,11 +144,11 @@ namespace IgiCore.Characters.Server
 				await context.SaveChangesAsync();
 				transaction.Commit();
 
-				await this.Events.RaiseAsync(CharacterEvents.Selected, newSession);
-
 				e.Reply(newSession);
 
 				this.characterSessions.Add(newSession);
+
+				await this.Events.RaiseAsync(CharacterEvents.Selected, newSession);
 			}
 		}
 
