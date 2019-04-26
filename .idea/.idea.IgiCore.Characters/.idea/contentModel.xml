@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Igi\.Rider2018.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Igi\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_IgiCore.Characters.-2082696996.00" t="ExcludeRecursive" />
+    <e p="G:\Workspace\plugins\IgiCore\characters" t="ExcludeRecursive">
+      <e p="Characters.Client" t="IncludeRecursive">
+        <e p="Characters.Client.csproj" t="IncludeRecursive" />
+        <e p="CharactersService.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Apparel.cs" t="Include" />
+          <e p="Appearance.cs" t="Include" />
+          <e p="Character.cs" t="Include" />
+          <e p="CharacterSession.cs" t="Include" />
+          <e p="FaceShape.cs" t="Include" />
+          <e p="Heritage.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Overlays" t="Include">
+          <e p="Character.js" t="Include" />
+          <e p="CharacterOverlay.cs" t="Include" />
+          <e p="CharacterOverlay.html" t="Include" />
+          <e p="CharacterSelect.js" t="Include" />
+          <e p="gravity.woff2" t="Include" />
+          <e p="main.js" t="Include" />
+          <e p="pricedown.woff2" t="Include" />
+          <e p="style.css" t="Include" />
+        </e>
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Characters.Server" t="IncludeRecursive">
+        <e p="CharacterManager.cs" t="Include" />
+        <e p="Characters.Server.csproj" t="IncludeRecursive" />
+        <e p="CharactersController.cs" t="Include" />
+        <e p="Events" t="Include">
+          <e p="CharacterEventArgs.cs" t="Include" />
+          <e p="CharacterSessionEventArgs.cs" t="Include" />
+        </e>
+        <e p="Migrations" t="Include">
+          <e p="201903230015160_Init.cs" t="Include" />
+          <e p="201904122043530_AddSessionFk.cs" t="Include" />
+          <e p="Configuration.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="Apparel.cs" t="Include" />
+          <e p="Appearance.cs" t="Include" />
+          <e p="Character.cs" t="Include" />
+          <e p="CharacterSession.cs" t="Include" />
+          <e p="FaceShape.cs" t="Include" />
+          <e p="Heritage.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Storage" t="Include">
+          <e p="StorageContext.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Characters.Shared" t="IncludeRecursive">
+        <e p="CharacterEvents.cs" t="Include" />
+        <e p="Characters.Shared.csproj" t="IncludeRecursive" />
+        <e p="Configuration.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Apparel" t="Include">
+            <e p="Component.cs" t="Include" />
+            <e p="ComponentTypes.cs" t="Include" />
+            <e p="Prop.cs" t="Include" />
+            <e p="PropTypes.cs" t="Include" />
+          </e>
+          <e p="Appearance" t="Include">
+            <e p="Feature.cs" t="Include" />
+            <e p="FeatureColorTypes.cs" t="Include" />
+            <e p="FeatureTypes.cs" t="Include" />
+          </e>
+          <e p="IApparel.cs" t="Include" />
+          <e p="IAppearance.cs" t="Include" />
+          <e p="ICharacter.cs" t="Include" />
+          <e p="ICharacterSession.cs" t="Include" />
+          <e p="IFaceShape.cs" t="Include" />
+          <e p="IHeritage.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="IgiCore.Characters.sln" t="IncludeFlat" />
+      <e p="nfive.yml" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Solution Items" t="Include" />
+    </e>
+  </component>
+</project>

@@ -137,6 +137,7 @@ namespace IgiCore.Characters.Server
 					Character = character,
 					Created = DateTime.UtcNow,
 					Connected = DateTime.UtcNow,
+					Session = e.Session
 				};
 
 				context.CharacterSessions.Add(newSession);
