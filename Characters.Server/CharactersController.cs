@@ -16,6 +16,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
+using NFive.SDK.Core.Rpc;
 using Configuration = IgiCore.Characters.Shared.Configuration;
 
 namespace IgiCore.Characters.Server
@@ -137,13 +138,18 @@ namespace IgiCore.Characters.Server
 					Character = character,
 					Created = DateTime.UtcNow,
 					Connected = DateTime.UtcNow,
-					Session = e.Session
+					SessionId = e.Session.Id
 				};
 
 				context.CharacterSessions.Add(newSession);
 
 				await context.SaveChangesAsync();
 				transaction.Commit();
+
+				this.Logger.Debug("Created character session");
+				this.Logger.Debug($"Session: {new Serializer().Serialize(e.Session)}");
+
+				newSession.Session = e.Session;
 
 				e.Reply(newSession);
 
@@ -227,6 +233,9 @@ namespace IgiCore.Characters.Server
 					transaction.Rollback();
 				}
 
+				var activeSession = this.characterSessions.FirstOrDefault(s => s.Character.Id == character.Id);
+				if (activeSession == null) return;
+				activeSession.Character = character;
 			}
 		}
 
@@ -249,6 +258,10 @@ namespace IgiCore.Characters.Server
 
 					transaction.Rollback();
 				}
+
+				var activeSession = this.characterSessions.FirstOrDefault(s => s.Character.Id == characterGuid);
+				if (activeSession == null) return;
+				activeSession.Character.Position = position;
 			}
 		}
 	}
