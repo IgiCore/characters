@@ -79,8 +79,8 @@
       <HintPath>..\packages\NFive.SDK.Core.0.1.0.39\lib\net452\NFive.SDK.Core.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NFive.SDK.Server.net, Version=0.1.0.40, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\NFive.SDK.Server.0.1.0.40\lib\net452\NFive.SDK.Server.net.dll</HintPath>
+    <Reference Include="NFive.SDK.Server.net, Version=0.1.0.41, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\NFive.SDK.Server.0.1.0.41\lib\net452\NFive.SDK.Server.net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System">
