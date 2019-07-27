@@ -15,7 +15,7 @@ namespace IgiCore.Characters.Shared
 		{
 			public TimeSpan CharacterInterval { get; set; } = TimeSpan.FromMinutes(5);
 
-			public TimeSpan PositionInterval { get; set; } = TimeSpan.FromSeconds(10);
+			public TimeSpan PositionInterval { get; set; } = TimeSpan.FromSeconds(2);
 		}
 
 		public class SelectionScreenConfiguration

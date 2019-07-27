@@ -238,7 +238,7 @@ namespace IgiCore.Characters.Client
 		{
 			if (!this.isPlaying) return;
 
-			this.activeCharacter.Position = Game.Player.Character.Position.ToPosition();
+			this.activeCharacter.Position = Game.Player.Character.Position.ToVector3().ToPosition();
 			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
 		}
 
@@ -246,7 +246,7 @@ namespace IgiCore.Characters.Client
 		{
 			if (!this.isPlaying) return;
 
-			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToPosition());
+			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToVector3().ToPosition());
 		}
 	}
 }
