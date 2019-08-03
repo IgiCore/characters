@@ -7,11 +7,11 @@ namespace IgiCore.Characters.Server.Events
 	[PublicAPI]
 	public class CharacterSessionEventArgs : EventArgs
 	{
-		public CharacterSession Session { get; }
+		public CharacterSession CharacterSession { get; }
 
 		public CharacterSessionEventArgs(CharacterSession session)
 		{
-			this.Session = session;
+			this.CharacterSession = session;
 		}
 	}
 }

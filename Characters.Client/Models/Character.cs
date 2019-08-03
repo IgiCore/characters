@@ -103,7 +103,7 @@ namespace IgiCore.Characters.Client.Models
 			// Apparently this _must_ be called
 			Game.Player.Character.Style.SetDefaultClothes();
 
-			Game.Player.Character.Position = this.Position.ToVector3();
+			Game.Player.Character.Position = this.Position.ToVector3().ToCitVector3();
 			Game.Player.Character.Armor = this.Armor;
 
 			API.RequestClipSet(this.WalkingStyle);

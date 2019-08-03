@@ -16,6 +16,9 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
+using IgiCore.Inventory.Server;
+using IgiCore.Inventory.Server.Models;
+using NFive.SDK.Core.Rpc;
 using Configuration = IgiCore.Characters.Shared.Configuration;
 
 namespace IgiCore.Characters.Server
@@ -23,11 +26,13 @@ namespace IgiCore.Characters.Server
 	[PublicAPI]
 	public class CharactersController : ConfigurableController<Configuration>
 	{
-		private readonly SessionManager sessions;
+		private readonly SessionManager sessionManager;
 
 		private readonly List<CharacterSession> characterSessions = new List<CharacterSession>();
 
-		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration) : base(logger, events, rpc, rcon, configuration)
+		private readonly InventoryManager inventoryManager;
+
+		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration, InventoryManager inventoryManager) : base(logger, events, rpc, rcon, configuration)
 		{
 			// Send configuration when requested
 			this.Rpc.Event(CharacterEvents.Configuration).On(e => e.Reply(this.Configuration));
@@ -40,9 +45,11 @@ namespace IgiCore.Characters.Server
 
 			this.Events.OnRequest(CharacterEvents.GetActive, () => this.characterSessions);
 
+			this.inventoryManager = inventoryManager;
+
 			// Listen for NFive SessionManager plugin events
-			this.sessions = new SessionManager(this.Events, this.Rpc);
-			this.sessions.ClientDisconnected += OnClientDisconnected;
+			this.sessionManager = new SessionManager(this.Events, this.Rpc);
+			this.sessionManager.ClientDisconnected += OnClientDisconnected;
 
 			Cleanup();
 		}
@@ -137,12 +144,18 @@ namespace IgiCore.Characters.Server
 					Character = character,
 					Created = DateTime.UtcNow,
 					Connected = DateTime.UtcNow,
+					SessionId = e.Session.Id
 				};
 
 				context.CharacterSessions.Add(newSession);
 
 				await context.SaveChangesAsync();
 				transaction.Commit();
+
+				this.Logger.Debug("Created character session");
+				this.Logger.Debug($"Session: {new Serializer().Serialize(e.Session)}");
+
+				newSession.Session = e.Session;
 
 				e.Reply(newSession);
 
@@ -205,6 +218,41 @@ namespace IgiCore.Characters.Server
 					// TODO: Reply with an error so client doesn't hang
 				}
 			}
+
+			CreateInventories(character);
+		}
+
+		public void CreateInventories(Character character)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var containerToCreate = new Container()
+					{
+						Height = 10,
+						Width = 10
+					};
+
+					var container = this.inventoryManager.CreateContainer(containerToCreate);
+
+					context.CharacterInventories.Add(new CharacterInventory()
+					{
+						CharacterId = character.Id,
+						ContainerId = container.Id,
+					});
+
+					context.SaveChanges();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex);
+
+					transaction.Rollback();
+				}
+			}
 		}
 
 		public async void SaveCharacter(IRpcEvent e, Character character)
@@ -226,6 +274,9 @@ namespace IgiCore.Characters.Server
 					transaction.Rollback();
 				}
 
+				var activeSession = this.characterSessions.FirstOrDefault(s => s.Character.Id == character.Id);
+				if (activeSession == null) return;
+				activeSession.Character = character;
 			}
 		}
 
@@ -248,6 +299,10 @@ namespace IgiCore.Characters.Server
 
 					transaction.Rollback();
 				}
+
+				var activeSession = this.characterSessions.FirstOrDefault(s => s.Character.Id == characterGuid);
+				if (activeSession == null) return;
+				activeSession.Character.Position = position;
 			}
 		}
 	}

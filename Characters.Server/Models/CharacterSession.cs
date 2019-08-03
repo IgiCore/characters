@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IgiCore.Characters.Shared.Models;
 using Newtonsoft.Json;
+using NFive.SDK.Core.Models.Player;
 
 namespace IgiCore.Characters.Server.Models
 {
@@ -47,7 +48,7 @@ namespace IgiCore.Characters.Server.Models
 		/// Gets or sets the character identifier.
 		/// </summary>
 		/// <value>
-		/// The user identifier.
+		/// The character identifier.
 		/// </value>
 		[Required]
 		[ForeignKey("Character")]
@@ -61,6 +62,25 @@ namespace IgiCore.Characters.Server.Models
 		/// </value>
 		[JsonIgnore]
 		public virtual Character Character { get; set; }
+
+		/// <summary>
+		/// Gets or sets the user session identifier.
+		/// </summary>
+		/// <value>
+		/// The session identifier.
+		/// </value>
+		[Required]
+		[ForeignKey("Session")]
+		public Guid SessionId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the user session.
+		/// </summary>
+		/// <value>
+		/// The user session.
+		/// </value>
+		[JsonIgnore]
+		public virtual Session Session { get; set; }
 
 		/// <summary>
 		/// Gets a value indicating whether a character is currently connected.
