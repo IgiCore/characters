@@ -10,6 +10,8 @@ namespace IgiCore.Characters.Server.Storage
 
 		public DbSet<Apparel> Appearances { get; set; }
 
+		public DbSet<CharacterInventory> CharacterInventories { get; set; }
+
 		public DbSet<CharacterSession> CharacterSessions { get; set; }
 	}
 }

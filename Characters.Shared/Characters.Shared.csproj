@@ -58,6 +58,7 @@
     <Compile Include="Models\Appearance\FeatureColorTypes.cs" />
     <Compile Include="Models\Appearance\FeatureTypes.cs" />
     <Compile Include="Models\IAppearance.cs" />
+    <Compile Include="Models\ICharacterInventory.cs" />
     <Compile Include="Models\IFaceShape.cs" />
     <Compile Include="Models\IHeritage.cs" />
     <Compile Include="Models\Apparel\Component.cs" />
