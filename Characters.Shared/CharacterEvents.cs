@@ -9,8 +9,14 @@ namespace IgiCore.Characters.Shared
 		public const string Delete = "igicore:character:delete";
 		public const string Select = "igicore:character:select";
 		public const string DeselectAll = "igicore:character:deselectall";
+
 		public const string SaveCharacter = "igicore:character:save:character";
 		public const string SavePosition = "igicore:character:save:position";
+
+		public const string SaveHeritage = "igicore:characters:save:heritage";
+		public const string SaveFacialTrait = "igicore:characters:save:facialtrait";
+		public const string SaveStyle = "igicore:characters:save:style";
+		public const string SaveTrait = "igicore:characters:save:trait";
 
 		public const string Selecting = "igicore:character:selecting";
 		public const string Selected = "igicore:character:selected";

@@ -1,6 +1,6 @@
-using System;
 using JetBrains.Annotations;
 using NFive.SDK.Core.Models;
+using System;
 
 namespace IgiCore.Characters.Shared.Models
 {

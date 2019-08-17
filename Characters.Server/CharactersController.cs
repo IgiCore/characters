@@ -1,10 +1,13 @@
 using IgiCore.Characters.Server.Models;
 using IgiCore.Characters.Server.Storage;
 using IgiCore.Characters.Shared;
+using IgiCore.Inventory.Server;
+using IgiCore.Inventory.Server.Models;
 using JetBrains.Annotations;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
+using NFive.SDK.Core.Rpc;
 using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rcon;
@@ -14,11 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
-using IgiCore.Inventory.Server;
-using IgiCore.Inventory.Server.Models;
-using NFive.SDK.Core.Rpc;
 using Configuration = IgiCore.Characters.Shared.Configuration;
 
 namespace IgiCore.Characters.Server
@@ -40,8 +41,13 @@ namespace IgiCore.Characters.Server
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
 			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
 			this.Rpc.Event(CharacterEvents.Select).On<Guid>(Select);
+			
 			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
 			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
+			this.Rpc.Event(CharacterEvents.SaveHeritage).On<Guid, CharacterHeritage>(SaveHeritage);
+			this.Rpc.Event(CharacterEvents.SaveFacialTrait).On<Guid, CharacterFacialTrait>(SaveFacialTrait);
+			this.Rpc.Event(CharacterEvents.SaveTrait).On<Guid, CharacterTrait>(SaveTrait);
+			this.Rpc.Event(CharacterEvents.SaveStyle).On<Guid, CharacterStyle>(SaveStyle);
 
 			this.Events.OnRequest(CharacterEvents.GetActive, () => this.characterSessions);
 
@@ -188,10 +194,10 @@ namespace IgiCore.Characters.Server
 			character.Ssn = Character.GenerateSsn();
 			character.LastPlayed = DateTime.UtcNow;
 			character.Position = new Position(0f, 0f, 71f);
-			character.Apparel = new Apparel();
-			character.Appearance = new Appearance();
-			character.FaceShape = new FaceShape();
-			character.Heritage = new Heritage();
+			character.FacialTrait = new CharacterFacialTrait();
+			character.Heritage = new CharacterHeritage();
+			character.Style = new CharacterStyle();
+			character.Trait = new CharacterTrait();
 
 			// Save character
 			using (var context = new StorageContext())
@@ -303,6 +309,106 @@ namespace IgiCore.Characters.Server
 				var activeSession = this.characterSessions.FirstOrDefault(s => s.Character.Id == characterGuid);
 				if (activeSession == null) return;
 				activeSession.Character.Position = position;
+			}
+		}
+
+		private async void SaveFacialTrait(IRpcEvent e, Guid characterId, CharacterFacialTrait facialTrait)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var save = context.Characters.Include(c => c.FacialTrait).Single(c => c.Id == characterId);
+
+					facialTrait.Id = save.FacialTrait.Id;
+
+					context.Entry(save.FacialTrait).CurrentValues.SetValues(facialTrait);
+
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex, "Character Facial Features Save");
+
+					transaction.Rollback();
+				}
+			}
+		}
+
+		private async void SaveHeritage(IRpcEvent e, Guid characterId, CharacterHeritage heritage)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var save = context.Characters.Include(c => c.Heritage).Single(c => c.Id == characterId);
+
+					heritage.Id = save.HeritageId;
+
+					context.Entry(save.Heritage).CurrentValues.SetValues(heritage);
+
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex, "Character Heritage Save");
+
+					transaction.Rollback();
+				}
+			}
+		}
+
+		private async void SaveStyle(IRpcEvent e, Guid characterId, CharacterStyle style)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var save = context.Characters.Include(c => c.Style).Single(c => c.Id == characterId);
+
+					style.Id = save.StyleId;
+
+					context.Entry(save.Style).CurrentValues.SetValues(style);
+
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex, "Character Style Save");
+
+					transaction.Rollback();
+				}
+			}
+		}
+
+		private async void SaveTrait(IRpcEvent e, Guid characterId, CharacterTrait trait)
+		{
+			using (var context = new StorageContext())
+			using (var transaction = context.Database.BeginTransaction())
+			{
+				try
+				{
+					var save = context.Characters.Include(c => c.Trait).Single(c => c.Id == characterId);
+
+					trait.Id = save.TraitId;
+
+					context.Entry(save.Trait).CurrentValues.SetValues(trait);
+
+					await context.SaveChangesAsync();
+					transaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					this.Logger.Error(ex, "Character Trait Save");
+
+					transaction.Rollback();
+				}
 			}
 		}
 	}

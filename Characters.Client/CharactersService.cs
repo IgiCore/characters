@@ -100,7 +100,7 @@ namespace IgiCore.Characters.Client
 		{
 			if (string.IsNullOrWhiteSpace(e.Character.Middlename)) e.Character.Middlename = null;
 
-			e.Character.WalkingStyle = "move_m@drunk@verydrunk";
+			e.Character.WalkingStyle = (e.Character.Gender == 0 ? "move_m@generic" : "move_f@generic");
 			e.Character.Model = ((uint)(e.Character.Gender == 0 ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01)).ToString();
 
 			// Send new character
@@ -238,8 +238,22 @@ namespace IgiCore.Characters.Client
 		{
 			if (!this.isPlaying) return;
 
-			this.activeCharacter.Position = Game.Player.Character.Position.ToVector3().ToPosition();
+			var player = Game.PlayerPed;
+			
+			this.activeCharacter.Position = player.Position.ToVector3().ToPosition();
+			this.activeCharacter.Model = ((uint)player.Model.Hash).ToString();
+
 			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
+
+			this.Rpc.Event(CharacterEvents.SaveStyle).Trigger(this.activeCharacter.Id, CharacterStyle.ConvertStyle(player.Style, this.activeCharacter.Id));
+
+			// FreeMode Models only
+			if (!(this.activeCharacter.ModelHash == PedHash.FreemodeMale01 ||
+			      this.activeCharacter.ModelHash == PedHash.FreemodeFemale01)) return;
+
+			this.Rpc.Event(CharacterEvents.SaveFacialTrait).Trigger(this.activeCharacter.Id, CharacterFacialTrait.ConvertFacialTrait(player.Handle));
+			this.Rpc.Event(CharacterEvents.SaveHeritage).Trigger(this.activeCharacter.Id, CharacterHeritage.ConvertHeritage(player.GetHeadBlendData(), this.activeCharacter.Created));
+			this.Rpc.Event(CharacterEvents.SaveTrait).Trigger(this.activeCharacter.Id, CharacterTrait.ConvertTrait(player));
 		}
 
 		private void SavePosition()
