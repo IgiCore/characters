@@ -56,7 +56,11 @@ namespace IgiCore.Characters.Client.Models
 
 			API.SetPedHeadBlendData(player, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Parent1, this.Heritage.Parent2, 0, this.Heritage.Resemblance, this.Heritage.SkinTone, 0f, true);
 
-			API.SetPedHairColor(player, this.Appearance.HairColorId, this.Appearance.HairHighlightColor);
+			API.SetPedComponentVariation(player, (int)ComponentTypes.Hair, this.Appearance.Hair.HairId, 0, 2);
+			API.SetPedHairColor(player, this.Appearance.Hair.ColorId, this.Appearance.Hair.HighlightColorId);
+			if (!string.IsNullOrEmpty(this.Appearance.Hair.Scalp) && !string.IsNullOrEmpty(this.Appearance.Hair.ScalpCollection))
+				API.SetPedDecoration(player, (uint) API.GetHashKey(this.Appearance.Hair.ScalpCollection),
+					(uint) API.GetHashKey(this.Appearance.Hair.Scalp));
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Age, this.Appearance.Aging.Index, this.Appearance.Aging.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Beard, this.Appearance.Beard.Index, this.Appearance.Beard.Opacity);
 			API.SetPedEyeColor(player, this.Appearance.EyeColorId);
@@ -70,7 +74,7 @@ namespace IgiCore.Characters.Client.Models
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Blush, this.Appearance.Blush.Index, this.Appearance.Blush.Opacity);
 			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Blush, (int)this.Appearance.Blush.ColorType, this.Appearance.Blush.ColorId, this.Appearance.Blush.SecondColorId);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Complexion, this.Appearance.Complexion.Index, this.Appearance.Complexion.Opacity);
-			API.SetPedHeadOverlay(player, (int)FeatureTypes.SunDamage, this.Appearance.SunDamage.Index, this.Appearance.SunDamage.Opacity);
+			API.SetPedHeadOverlay(player, (int)FeatureTypes.SunDamage, this.Appearance.SkinDamage.Index, this.Appearance.SkinDamage.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.MolesAndFreckles, this.Appearance.MolesAndFreckles.Index, this.Appearance.MolesAndFreckles.Opacity);
 			API.SetPedHeadOverlay(player, (int)FeatureTypes.Chest, this.Appearance.Chest.Index, this.Appearance.Chest.Opacity);
 			API.SetPedHeadOverlayColor(player, (int)FeatureTypes.Chest, (int)this.Appearance.Chest.ColorType, this.Appearance.Chest.ColorId, this.Appearance.Chest.SecondColorId);

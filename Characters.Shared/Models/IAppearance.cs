@@ -6,8 +6,7 @@ namespace IgiCore.Characters.Shared.Models
 	public interface IAppearance : IIdentityModel
 	{
 		int EyeColorId { get; set; }
-		int HairColorId { get; set; }
-		int HairHighlightColor { get; set; }
+		Hair Hair { get; set; }
 		
 		Feature Aging { get; set; }
 		Feature Beard { get; set; }
@@ -19,6 +18,6 @@ namespace IgiCore.Characters.Shared.Models
 		Feature Lipstick { get; set; }
 		Feature Makeup { get; set; }
 		Feature MolesAndFreckles { get; set; }
-		Feature SunDamage { get; set; }
+		Feature SkinDamage { get; set; }
 	}
 }

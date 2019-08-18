@@ -108,10 +108,10 @@ namespace IgiCore.Characters.Shared.Models
 		string WalkingStyle { get; set; }
 
 		/// <summary>
-		/// Gets or sets the timestamp of when the character was created.
+		/// Gets or sets the timestamp of when the character last played.
 		/// </summary>
 		/// <value>
-		/// The timestamp of when the character was created.
+		/// The timestamp of when the character last played.
 		/// </value>
 		DateTime? LastPlayed { get; set; }
 	}

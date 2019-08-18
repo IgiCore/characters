@@ -7,8 +7,7 @@ namespace IgiCore.Characters.Client.Models
 	public class Appearance : IdentityModel, IAppearance
 	{
 		public int EyeColorId { get; set; }
-		public int HairColorId { get; set; }
-		public int HairHighlightColor { get; set; }
+		public Hair Hair { get; set; }
 
 		public Feature Aging { get; set; }
 		public Feature Beard { get; set; }
@@ -20,6 +19,6 @@ namespace IgiCore.Characters.Client.Models
 		public Feature Lipstick { get; set; }
 		public Feature Makeup { get; set; }
 		public Feature MolesAndFreckles { get; set; }
-		public Feature SunDamage { get; set; }
+		public Feature SkinDamage { get; set; }
 	}
 }
