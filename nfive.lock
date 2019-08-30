@@ -1,1 +1,18 @@
-plugins: []
+plugins:
+- name: IgiCore/inventory
+  version: 0.1.0
+  description: NFive Plugin
+  author: IgiCore
+  license: LGPL-3.0-or-later
+  server:
+    main:
+    - IgiCore.Inventory.Server
+    include:
+    - IgiCore.Inventory.Shared
+  client:
+    main:
+    - IgiCore.Inventory.Client
+    include:
+    - IgiCore.Inventory.Shared
+    files:
+    - Overlays/InventoryOverlay.html
