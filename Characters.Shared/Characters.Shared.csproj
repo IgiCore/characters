@@ -50,24 +50,23 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterEvents.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Models\Appearance\Feature.cs" />
-    <Compile Include="Models\Appearance\FeatureColorTypes.cs" />
-    <Compile Include="Models\Appearance\FeatureTypes.cs" />
-    <Compile Include="Models\IAppearance.cs" />
+    <Compile Include="Models\ICharacterFacialTrait.cs" />
+    <Compile Include="Models\ICharacterHeritage.cs" />
     <Compile Include="Models\ICharacterInventory.cs" />
-    <Compile Include="Models\IFaceShape.cs" />
-    <Compile Include="Models\IHeritage.cs" />
-    <Compile Include="Models\Apparel\Component.cs" />
-    <Compile Include="Models\Apparel\ComponentTypes.cs" />
     <Compile Include="Models\ICharacter.cs" />
-    <Compile Include="Models\IApparel.cs" />
-    <Compile Include="Models\Apparel\Prop.cs" />
-    <Compile Include="Models\Apparel\PropTypes.cs" />
     <Compile Include="Models\ICharacterSession.cs" />
+    <Compile Include="Models\ICharacterStyle.cs" />
+    <Compile Include="Models\ICharacterTrait.cs" />
+    <Compile Include="Models\Style\Component.cs" />
+    <Compile Include="Models\Style\ComponentTypes.cs" />
+    <Compile Include="Models\Style\Prop.cs" />
+    <Compile Include="Models\Style\PropTypes.cs" />
+    <Compile Include="Models\Trait\Feature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

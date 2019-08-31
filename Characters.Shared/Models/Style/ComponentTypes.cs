@@ -1,4 +1,4 @@
-namespace IgiCore.Characters.Shared.Models.Apparel
+namespace IgiCore.Characters.Shared.Models.Style
 {
 	public enum ComponentTypes
 	{

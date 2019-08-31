@@ -61,12 +61,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Appearance.cs" />
     <Compile Include="Models\Character.cs" />
-    <Compile Include="Models\Apparel.cs" />
+    <Compile Include="Models\CharacterFacialTrait.cs" />
+    <Compile Include="Models\CharacterHeritage.cs" />
     <Compile Include="Models\CharacterSession.cs" />
-    <Compile Include="Models\FaceShape.cs" />
-    <Compile Include="Models\Heritage.cs" />
+    <Compile Include="Models\CharacterStyle.cs" />
+    <Compile Include="Models\CharacterTrait.cs" />
     <Compile Include="Overlays\CharacterOverlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CharactersService.cs" />
