@@ -5,12 +5,13 @@ namespace IgiCore.Characters.Shared
 		public const string Configuration = "igicore:character:configuration";
 		public const string Disconnecting = "igicore:character:disconnecting";
 		public const string Create = "igicore:character:create";
-		public const string Load = "igicore:character:load";
+		public const string GetCharactersForUser = "igicore:character:load";
 		public const string Delete = "igicore:character:delete";
 		public const string Select = "igicore:character:select";
 		public const string DeselectAll = "igicore:character:deselectall";
 		public const string SaveCharacter = "igicore:character:save:character";
 		public const string SavePosition = "igicore:character:save:position";
+		public const string GetCharacterInventories = "igicore:character:inventories";
 
 		public const string Selecting = "igicore:character:selecting";
 		public const string Selected = "igicore:character:selected";
@@ -18,5 +19,6 @@ namespace IgiCore.Characters.Shared
 		public const string Deselected = "igicore:character:deselected";
 
 		public const string GetActive = "igicore:character:getactive";
+		public const string GetActiveClientCharacter = "igicore:character:getactiveclientcharacter";
 	}
 }

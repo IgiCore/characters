@@ -36,7 +36,7 @@ namespace IgiCore.Characters.Server
 		{
 			// Send configuration when requested
 			this.Rpc.Event(CharacterEvents.Configuration).On(e => e.Reply(this.Configuration));
-			this.Rpc.Event(CharacterEvents.Load).On(Load);
+			this.Rpc.Event(CharacterEvents.GetCharactersForUser).On(GetCharactersForUser);
 			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
 			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
 			this.Rpc.Event(CharacterEvents.Select).On<Guid>(Select);
@@ -107,7 +107,7 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-		public async void Delete(IRpcEvent e, Guid id)
+		private async void Delete(IRpcEvent e, Guid id)
 		{
 			using (var context = new StorageContext())
 			{
@@ -117,11 +117,11 @@ namespace IgiCore.Characters.Server
 
 				await context.SaveChangesAsync();
 
-				Load(e);
+				GetCharactersForUser(e, e.User.Id);
 			}
 		}
 
-		public async void Select(IRpcEvent e, Guid id)
+		private async void Select(IRpcEvent e, Guid id)
 		{
 			await DeselectAll(e.User.Id);
 
@@ -165,17 +165,24 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-		public void Load(IRpcEvent e)
+		private void GetCharactersForUser(IRpcEvent e)
 		{
+			this.Logger.Info($"GetCharactersForUser(IRpcEvent e, Guid userId)");
+			GetCharactersForUser(e, e.User.Id);
+		}
+
+		private void GetCharactersForUser(IRpcEvent e, Guid userId)
+		{
+			this.Logger.Info($"GetCharactersForUser(IRpcEvent e, Guid userId) - userId: {userId}");
 			using (var context = new StorageContext())
 			{
-				var characters = context.Characters.Where(c => c.Deleted == null && c.UserId == e.User.Id).ToList();
+				var characters = context.Characters.Where(c => c.Deleted == null && c.UserId == userId).ToList();
 
 				e.Reply(characters);
 			}
 		}
 
-		public async void Create(IRpcEvent e, Character character)
+		private async void Create(IRpcEvent e, Character character)
 		{
 			// TODO: Validate client sent values
 
@@ -224,6 +231,8 @@ namespace IgiCore.Characters.Server
 
 		public void CreateInventories(Character character)
 		{
+			var itemDefinition = this.inventoryManager.GetItemDefinitions().First();
+
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
 			{
@@ -231,8 +240,18 @@ namespace IgiCore.Characters.Server
 				{
 					var containerToCreate = new Container()
 					{
+						Name = "Backpack",
 						Height = 10,
-						Width = 10
+						Width = 10,
+						Items = new List<Item>()
+						{
+							new Item()
+							{
+								Width = itemDefinition.Width,
+								Height = itemDefinition.Height,
+								ItemDefinitionId = itemDefinition.Id
+							}
+						}
 					};
 
 					var container = this.inventoryManager.CreateContainer(containerToCreate);

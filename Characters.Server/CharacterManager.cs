@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using IgiCore.Characters.Server.Events;
 using IgiCore.Characters.Server.Models;
+using IgiCore.Characters.Server.Storage;
 using IgiCore.Characters.Shared;
+using IgiCore.Inventory.Server.Models;
 using JetBrains.Annotations;
+using NFive.SDK.Core.IoC;
 using NFive.SDK.Server.Events;
 using NFive.SDK.Server.Rpc;
 
@@ -12,6 +17,7 @@ namespace IgiCore.Characters.Server
 	/// <summary>
 	/// Wrapper library for accessing character data from external plugins.
 	/// </summary>
+	[Component(Lifetime = Lifetime.Singleton)]
 	[PublicAPI]
 	public class CharacterManager
 	{
@@ -78,6 +84,18 @@ namespace IgiCore.Characters.Server
 		public CharacterSession Select(Guid characterId)
 		{
 			return this.Events.Request<Guid, CharacterSession>(CharacterEvents.Select, characterId);
+		}
+
+		public List<Container> GetCharacterInventories(Guid characterId)
+		{
+			using (var context = new StorageContext())
+			{
+				return context.CharacterInventories
+					.Where(ci => ci.Character.Id == characterId)
+					.Select(ci => ci.Container)
+					.Include(c => c.Items.Select(i => i.ItemDefinition))
+					.ToList();
+			}
 		}
 	}
 }

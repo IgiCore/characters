@@ -73,7 +73,7 @@ namespace IgiCore.Characters.Client
 			while (Screen.Fading.IsFadingOut) await Delay(10);
 
 			// Get characters
-			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
+			var characters = await this.Rpc.Event(CharacterEvents.GetCharactersForUser).Request<List<Character>>();
 
 			// Show overlay
 			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
@@ -201,7 +201,7 @@ namespace IgiCore.Characters.Client
 			Game.Player.Character.Position = Vector3.Zero;
 
 			// Get characters
-			var characters = await this.Rpc.Event(CharacterEvents.Load).Request<List<Character>>();
+			var characters = await this.Rpc.Event(CharacterEvents.GetCharactersForUser).Request<List<Character>>();
 
 			// Show overlay
 			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
@@ -219,7 +219,6 @@ namespace IgiCore.Characters.Client
 
 			this.Ticks.Detach(OnHotkey);
 		}
-
 		public async Task OnSaveCharacter()
 		{
 			SaveCharacter();
