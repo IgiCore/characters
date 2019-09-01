@@ -21,3 +21,9 @@ client:
   - Overlays/main.js
   - Overlays/pricedown.woff2
   - Overlays/style.css
+dependencies:
+  IgiCore/inventory: ^0.1.0
+repositories:
+- name: IgiCore/inventory
+  type: local
+  path: G:\Workspace\plugins\IgiCore\inventory
