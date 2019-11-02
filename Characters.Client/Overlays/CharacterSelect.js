@@ -26,13 +26,14 @@ window.CharacterSelect = {
 	},
 
 	mounted() {
-		nfive.on('load', async (characters) => {
+		nfive.on('ready', async characters => {
 			await this.$store.dispatch('setCharacters', characters)
-
 			nfive.show()
 		})
 
-		nfive.send('load')
+		nfive.on('sync', async characters => {
+			await this.$store.dispatch('setCharacters', characters)
+		})
 	},
 
 	beforeDestroy() {

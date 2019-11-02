@@ -1,5 +1,6 @@
 using System;
 using NFive.SDK.Core.Controllers;
+using NFive.SDK.Core.Input;
 
 namespace IgiCore.Characters.Shared
 {
@@ -20,7 +21,7 @@ namespace IgiCore.Characters.Shared
 
 		public class SelectionScreenConfiguration
 		{
-			public string Hotkey { get; set; } = "ReplayStartStopRecording"; // Default to F1
+			public InputControl Hotkey { get; set; } = InputControl.ReplayStartStopRecording; // Default to F1
 		}
 	}
 }

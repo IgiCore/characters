@@ -10,14 +10,14 @@ using NFive.SDK.Client.Events;
 using NFive.SDK.Client.Extensions;
 using NFive.SDK.Client.Input;
 using NFive.SDK.Client.Interface;
-using NFive.SDK.Client.Rpc;
 using NFive.SDK.Client.Services;
 using NFive.SDK.Core.Diagnostics;
 using NFive.SDK.Core.Models.Player;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NFive.SDK.Client.Communications;
+using NFive.SDK.Core.Extensions;
 
 namespace IgiCore.Characters.Client
 {
@@ -27,19 +27,19 @@ namespace IgiCore.Characters.Client
 		private bool started = false;
 		private bool isPlaying;
 		private Configuration config;
-		private Control activateKey;
+		private Hotkey activateKey;
 		private CharacterOverlay overlay;
 		private CharacterSession session;
 		private Character activeCharacter;
 
-		public CharactersService(ILogger logger, ITickManager ticks, IEventManager events, IRpcHandler rpc, ICommandManager commands, OverlayManager overlay, User user) : base(logger, ticks, events, rpc, commands, overlay, user) { }
+		public CharactersService(ILogger logger, ITickManager ticks, ICommunicationManager comms, ICommandManager commands, IOverlayManager overlay, User user) : base(logger, ticks, comms, commands, overlay, user) { }
 
 		public override async Task Started()
 		{
 			// Request server configuration
-			this.config = await this.Rpc.Event(CharacterEvents.Configuration).Request<Configuration>();
+			this.config = await this.Comms.Event(CharacterEvents.Configuration).ToServer().Request<Configuration>();
 
-			this.activateKey = (Control)Enum.Parse(typeof(Control), this.config.SelectionScreen.Hotkey, true);
+			this.activateKey = new Hotkey(this.config.SelectionScreen.Hotkey);
 		}
 
 		public override async Task HoldFocus()
@@ -73,7 +73,7 @@ namespace IgiCore.Characters.Client
 			while (Screen.Fading.IsFadingOut) await Delay(10);
 
 			// Get characters
-			var characters = await this.Rpc.Event(CharacterEvents.GetCharactersForUser).Request<List<Character>>();
+			var characters = await this.Comms.Event(CharacterEvents.GetCharactersForUser).ToServer().Request<List<Character>>();
 
 			// Show overlay
 			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
@@ -83,7 +83,7 @@ namespace IgiCore.Characters.Client
 			this.overlay.Delete += OnDelete;
 
 			// Focus overlay
-			API.SetNuiFocus(true, true);
+			this.overlay.Focus(true);
 
 			// Shut down the NUI loading screen
 			API.ShutdownLoadingScreenNui();
@@ -104,20 +104,20 @@ namespace IgiCore.Characters.Client
 			e.Character.Model = ((uint)(e.Character.Gender == 0 ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01)).ToString();
 
 			// Send new character
-			var character = await this.Rpc.Event(CharacterEvents.Create).Request<Character>(e.Character);
+			var character = await this.Comms.Event(CharacterEvents.Create).ToServer().Request<Character>(e.Character);
 
-			this.session = await this.Rpc.Event(CharacterEvents.Select).Request<CharacterSession>(character.Id);
+			this.session = await this.Comms.Event(CharacterEvents.Select).ToServer().Request<CharacterSession>(character.Id);
 			await Play(e.Overlay, character);
 		}
 
 		private void OnDisconnect(object sender, OverlayEventArgs e)
 		{
-			this.Rpc.Event(SessionEvents.DisconnectPlayer).Trigger("Thanks for playing");
+			this.Comms.Event(SessionEvents.DisconnectPlayer).ToServer().Emit("Thanks for playing");
 		}
 
 		private async void OnSelect(object sender, IdOverlayEventArgs e)
 		{
-			this.session = await this.Rpc.Event(CharacterEvents.Select).Request<CharacterSession>(e.Id);
+			this.session = await this.Comms.Event(CharacterEvents.Select).ToServer().Request<CharacterSession>(e.Id);
 			await Play(e.Overlay, this.overlay.Characters.First(c => c.Id == e.Id));
 		}
 
@@ -125,7 +125,7 @@ namespace IgiCore.Characters.Client
 		{
 			this.Logger.Debug($"Delete {e.Id}");
 
-			this.overlay.Characters = await this.Rpc.Event(CharacterEvents.Delete).Request<List<Character>>(e.Id);
+			this.overlay.Characters = await this.Comms.Event(CharacterEvents.Delete).ToServer().Request<List<Character>>(e.Id);
 
 			this.overlay.SyncCharacters();
 		}
@@ -136,7 +136,7 @@ namespace IgiCore.Characters.Client
 			o.Dispose();
 
 			// Un-focus overlay
-			API.SetNuiFocus(false, false);
+			this.overlay.Blur();
 
 			// Load and render character model
 			while (!await Game.Player.ChangeModel(new Model(character.ModelHash))) await Delay(10);
@@ -163,9 +163,9 @@ namespace IgiCore.Characters.Client
 
 			// Attach tick handlers after character selection
 			// to reduce character select click lag
-			this.Ticks.Attach(OnHotkey);
-			this.Ticks.Attach(OnSaveCharacter);
-			this.Ticks.Attach(OnSavePosition);
+			this.Ticks.On(OnHotkey);
+			this.Ticks.On(OnSaveCharacter);
+			this.Ticks.On(OnSavePosition);
 
 			// Release focus hold
 			this.started = true;
@@ -173,7 +173,7 @@ namespace IgiCore.Characters.Client
 
 		public async Task OnHotkey()
 		{
-			if (!Input.IsControlJustPressed(this.activateKey)) return;
+			if (!this.activateKey.IsJustPressed()) return;
 
 			// Set as playing
 			this.isPlaying = false;
@@ -201,7 +201,7 @@ namespace IgiCore.Characters.Client
 			Game.Player.Character.Position = Vector3.Zero;
 
 			// Get characters
-			var characters = await this.Rpc.Event(CharacterEvents.GetCharactersForUser).Request<List<Character>>();
+			var characters = await this.Comms.Event(CharacterEvents.GetCharactersForUser).ToServer().Request<List<Character>>();
 
 			// Show overlay
 			this.overlay = new CharacterOverlay(characters, this.OverlayManager);
@@ -211,13 +211,13 @@ namespace IgiCore.Characters.Client
 			this.overlay.Delete += OnDelete;
 
 			// Focus overlay
-			API.SetNuiFocus(true, true);
+			this.overlay.Focus(true);
 
 			// Fade in
 			Screen.Fading.FadeIn(500);
 			while (Screen.Fading.IsFadingIn) await Delay(10);
 
-			this.Ticks.Detach(OnHotkey);
+			this.Ticks.Off(OnHotkey);
 		}
 		public async Task OnSaveCharacter()
 		{
@@ -238,14 +238,14 @@ namespace IgiCore.Characters.Client
 			if (!this.isPlaying) return;
 
 			this.activeCharacter.Position = Game.Player.Character.Position.ToVector3().ToPosition();
-			this.Rpc.Event(CharacterEvents.SaveCharacter).Trigger(this.activeCharacter);
+			this.Comms.Event(CharacterEvents.SaveCharacter).ToServer().Emit(this.activeCharacter);
 		}
 
 		private void SavePosition()
 		{
 			if (!this.isPlaying) return;
 
-			this.Rpc.Event(CharacterEvents.SavePosition).Trigger(this.activeCharacter.Id, Game.Player.Character.Position.ToVector3().ToPosition());
+			this.Comms.Event(CharacterEvents.SavePosition).ToServer().Emit(this.activeCharacter.Id, Game.Player.Character.Position.ToVector3().ToPosition());
 		}
 	}
 }
