@@ -1,29 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using IgiCore.Characters.Server.Events;
 using IgiCore.Characters.Server.Models;
+using IgiCore.Characters.Server.Storage;
 using IgiCore.Characters.Shared;
+using IgiCore.Inventory.Server.Models;
 using JetBrains.Annotations;
-using NFive.SDK.Server.Events;
-using NFive.SDK.Server.Rpc;
+using NFive.SDK.Server.Communications;
+using NFive.SDK.Server.IoC;
 
 namespace IgiCore.Characters.Server
 {
 	/// <summary>
 	/// Wrapper library for accessing character data from external plugins.
 	/// </summary>
+	[Component(Lifetime = Lifetime.Singleton)]
 	[PublicAPI]
 	public class CharacterManager
 	{
-		/// <summary>
-		/// The controller event manager.
-		/// </summary>
-		protected readonly IEventManager Events;
-
-		/// <summary>
-		/// The controller RPC handler.
-		/// </summary>
-		protected readonly IRpcHandler Rpc;
+		private readonly ICommunicationManager comms;
 
 		/// <summary>
 		/// Occurs when a character session is being created for the clients selected character to play.
@@ -51,23 +49,20 @@ namespace IgiCore.Characters.Server
 		/// <value>
 		/// The active character sessions.
 		/// </value>
-		public List<CharacterSession> ActiveCharacterSessions =>
-			this.Events.Request<List<CharacterSession>>(CharacterEvents.GetActive);
+		public async Task<List<CharacterSession>> ActiveCharacterSessions() =>
+			await this.comms.Event(CharacterEvents.GetActive).ToServer().Request<List<CharacterSession>>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CharacterManager"/> class.
 		/// </summary>
-		/// <param name="events">The controller event manager.</param>
-		/// <param name="rpc">The controller RPC handler.</param>
-		public CharacterManager(IEventManager events, IRpcHandler rpc)
+		/// <param name="comms"></param>
+		public CharacterManager(ICommunicationManager comms)
 		{
-			this.Events = events;
-			this.Rpc = rpc;
-
-			this.Events.On<Character>(CharacterEvents.Selecting, c => this.Selecting?.Invoke(this, new CharacterEventArgs(c)));
-			this.Events.On<CharacterSession>(CharacterEvents.Selected, c => this.Selected?.Invoke(this, new CharacterSessionEventArgs(c)));
-			this.Events.On<CharacterSession>(CharacterEvents.Deselecting, c => this.Deselecting?.Invoke(this, new CharacterSessionEventArgs(c)));
-			this.Events.On<CharacterSession>(CharacterEvents.Deselected, c => this.Deselected?.Invoke(this, new CharacterSessionEventArgs(c)));
+			this.comms = comms;
+			this.comms.Event(CharacterEvents.Selecting).FromServer().On<Character>((e, c) => this.Selecting?.Invoke(this, new CharacterEventArgs(c)));
+			this.comms.Event(CharacterEvents.Selected).FromServer().On<CharacterSession>((e, c) => this.Selected?.Invoke(this, new CharacterSessionEventArgs(c)));
+			this.comms.Event(CharacterEvents.Deselecting).FromServer().On<CharacterSession>((e, c) => this.Deselecting?.Invoke(this, new CharacterSessionEventArgs(c)));
+			this.comms.Event(CharacterEvents.Deselected).FromServer().On<CharacterSession>((e, c) => this.Deselected?.Invoke(this, new CharacterSessionEventArgs(c)));
 		}
 
 		/// <summary>
@@ -75,9 +70,18 @@ namespace IgiCore.Characters.Server
 		/// </summary>
 		/// <param name="characterId">The character identifier.</param>
 		/// <returns></returns>
-		public CharacterSession Select(Guid characterId)
+		public async Task<CharacterSession> Select(Guid characterId) => await this.comms.Event(CharacterEvents.Select).ToServer().Request<CharacterSession>(characterId);
+
+		public List<Container> GetCharacterInventories(Guid characterId)
 		{
-			return this.Events.Request<Guid, CharacterSession>(CharacterEvents.Select, characterId);
+			using (var context = new StorageContext())
+			{
+				return context.CharacterInventories
+					.Where(ci => ci.Character.Id == characterId)
+					.Select(ci => ci.Container)
+					.Include(c => c.Items.Select(i => i.ItemDefinition))
+					.ToList();
+			}
 		}
 	}
 }

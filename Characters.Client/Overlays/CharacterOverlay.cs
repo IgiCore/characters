@@ -14,23 +14,24 @@ namespace IgiCore.Characters.Client.Overlays
 
 		public List<Character> Characters { get; set; }
 
-		public CharacterOverlay(List<Character> characters, OverlayManager manager) : base("CharacterOverlay.html", manager)
+		public CharacterOverlay(List<Character> characters, IOverlayManager manager) : base(manager)
 		{
 			this.Characters = characters;
 
-			Attach("disconnect", (_, callback) => this.Disconnect?.Invoke(this, new OverlayEventArgs(this)));
-			Attach("load", (_, callback) => Send("load", this.Characters.ToArray()));
-			Attach<Character>("create", (character, callback) => this.Create?.Invoke(this, new CreateOverlayEventArgs(character, this)));
-			Attach<Guid>("select", (id, callback) => this.Select?.Invoke(this, new IdOverlayEventArgs(id, this)));
-			Attach<Guid>("delete", (id, callback) => this.Delete?.Invoke(this, new IdOverlayEventArgs(id, this)));
+			On("disconnect", () => this.Disconnect?.Invoke(this, new OverlayEventArgs(this)));
+			On<Character>("create", (character) => this.Create?.Invoke(this, new CreateOverlayEventArgs(character, this)));
+			On<Guid>("select", (id) => this.Select?.Invoke(this, new IdOverlayEventArgs(id, this)));
+			On<Guid>("delete", (id) => this.Delete?.Invoke(this, new IdOverlayEventArgs(id, this)));
 		}
+
+		protected override dynamic Ready() => this.Characters.ToArray();
 
 		public void SyncCharacters()
 		{
-			Send("load", this.Characters.ToArray());
+			Emit("sync", this.Characters.ToArray());
 		}
 	}
-
+	
 	public class CreateOverlayEventArgs : OverlayEventArgs
 	{
 		public Character Character { get; }

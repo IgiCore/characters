@@ -7,9 +7,6 @@ using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using NFive.SDK.Server.Controllers;
 using NFive.SDK.Server.Events;
-using NFive.SDK.Server.Rcon;
-using NFive.SDK.Server.Rpc;
-using NFive.SDK.Server.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,49 +15,55 @@ using System.Linq;
 using System.Threading.Tasks;
 using IgiCore.Inventory.Server;
 using IgiCore.Inventory.Server.Models;
-using NFive.SDK.Core.Rpc;
+using NFive.SDK.Core.Models.Player;
+using NFive.SDK.Server.Communications;
 using Configuration = IgiCore.Characters.Shared.Configuration;
+using NFive.SDK.Core.Utilities;
 
 namespace IgiCore.Characters.Server
 {
 	[PublicAPI]
 	public class CharactersController : ConfigurableController<Configuration>
 	{
-		private readonly SessionManager sessionManager;
-
 		private readonly List<CharacterSession> characterSessions = new List<CharacterSession>();
 
-		private readonly InventoryManager inventoryManager;
+		private readonly ICommunicationManager comms;
+		private IInventoryManager inventoryManager { get; set; }
 
-		public CharactersController(ILogger logger, IEventManager events, IRpcHandler rpc, IRconManager rcon, Configuration configuration, InventoryManager inventoryManager) : base(logger, events, rpc, rcon, configuration)
+		public CharactersController(ILogger logger, Configuration configuration, ICommunicationManager comms, IInventoryManager inventoryManager) : base(logger, configuration)
 		{
-			// Send configuration when requested
-			this.Rpc.Event(CharacterEvents.Configuration).On(e => e.Reply(this.Configuration));
-			this.Rpc.Event(CharacterEvents.Load).On(Load);
-			this.Rpc.Event(CharacterEvents.Create).On<Character>(Create);
-			this.Rpc.Event(CharacterEvents.Delete).On<Guid>(Delete);
-			this.Rpc.Event(CharacterEvents.Select).On<Guid>(Select);
-			this.Rpc.Event(CharacterEvents.SaveCharacter).On<Character>(SaveCharacter);
-			this.Rpc.Event(CharacterEvents.SavePosition).On<Guid, Position>(SavePosition);
-
-			this.Events.OnRequest(CharacterEvents.GetActive, () => this.characterSessions);
-
+			this.comms = comms;
 			this.inventoryManager = inventoryManager;
 
-			// Listen for NFive SessionManager plugin events
-			this.sessionManager = new SessionManager(this.Events, this.Rpc);
-			this.sessionManager.ClientDisconnected += OnClientDisconnected;
+			// Send configuration when requested
+			this.comms.Event(CharacterEvents.Configuration).FromClients().OnRequest(e => e.Reply(this.Configuration));
+			this.comms.Event(CharacterEvents.GetCharactersForUser).FromClients().OnRequest(GetCharactersForUser);
+			this.comms.Event(CharacterEvents.Create).FromClients().OnRequest<Character>(Create);
+			this.comms.Event(CharacterEvents.Delete).FromClients().OnRequest<Guid>(Delete);
+			this.comms.Event(CharacterEvents.Select).FromClients().OnRequest<Guid>(Select);
+			this.comms.Event(CharacterEvents.SaveCharacter).FromClients().On<Character>(SaveCharacter);
+			this.comms.Event(CharacterEvents.SavePosition).FromClients().On<Guid, Position>(SavePosition);
 
-			Cleanup();
+			this.comms.Event(CharacterEvents.GetActive).FromServer().OnRequest(e => e.Reply(this.characterSessions));
+
+			// Listen for NFive SessionManager plugin events
+			this.comms.Event(SessionEvents.ClientDisconnected).FromServer().On<IClient, Session>(OnClientDisconnected);
 		}
 
-		private void Cleanup()
+		public override Task Started()
+		{
+			Cleanup();
+
+			return base.Started();
+		}
+
+		private async void Cleanup()
 		{
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
 			{
 				var activeSessions = context.CharacterSessions.Where(s => s.Disconnected == null).ToList();
-				var lastServerActiveTime = this.Events.Request<DateTime?>(BootEvents.GetLastActiveTime) ?? DateTime.UtcNow;
+				var lastServerActiveTime = await this.comms.Event(BootEvents.GetLastActiveTime).ToServer().Request<DateTime?>() ?? DateTime.UtcNow;
 				foreach (var characterSession in activeSessions)
 				{
 					characterSession.Connected = null;
@@ -73,9 +76,9 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-		private async void OnClientDisconnected(object sender, ClientSessionEventArgs e)
+		private async void OnClientDisconnected(ICommunicationMessage e, IClient client, Session session)
 		{
-			await DeselectAll(e.Session.UserId);
+			await DeselectAll(session.UserId);
 		}
 
 		public async Task DeselectAll(Guid id)
@@ -90,7 +93,7 @@ namespace IgiCore.Characters.Server
 
 				foreach (var characterSession in activeSessions)
 				{
-					await this.Events.RaiseAsync(CharacterEvents.Deselecting, characterSession);
+					this.comms.Event(CharacterEvents.Deselecting).ToServer().Emit(characterSession);
 					characterSession.Connected = null;
 					characterSession.Disconnected = DateTime.UtcNow;
 					context.CharacterSessions.AddOrUpdate(characterSession);
@@ -102,12 +105,12 @@ namespace IgiCore.Characters.Server
 				foreach (var characterSession in activeSessions)
 				{
 					this.characterSessions.RemoveAll(c => c.Id == characterSession.Id);
-					await this.Events.RaiseAsync(CharacterEvents.Deselected, characterSession);
+					this.comms.Event(CharacterEvents.Deselected).ToServer().Emit(characterSession);
 				}
 			}
 		}
 
-		public async void Delete(IRpcEvent e, Guid id)
+		private async void Delete(ICommunicationMessage e, Guid id)
 		{
 			using (var context = new StorageContext())
 			{
@@ -117,11 +120,11 @@ namespace IgiCore.Characters.Server
 
 				await context.SaveChangesAsync();
 
-				Load(e);
+				GetCharactersForUser(e, e.User.Id);
 			}
 		}
 
-		public async void Select(IRpcEvent e, Guid id)
+		private async void Select(ICommunicationMessage e, Guid id)
 		{
 			await DeselectAll(e.User.Id);
 
@@ -135,7 +138,7 @@ namespace IgiCore.Characters.Server
 					e.Reply(null);
 					throw new Exception($"No character found for Id \"{id}\""); // TODO: CharacterException
 				}
-				await this.Events.RaiseAsync(CharacterEvents.Selecting, character);
+				this.comms.Event(CharacterEvents.Selecting).ToServer().Emit(character);
 
 				var newSession = new CharacterSession
 				{
@@ -161,21 +164,28 @@ namespace IgiCore.Characters.Server
 
 				this.characterSessions.Add(newSession);
 
-				await this.Events.RaiseAsync(CharacterEvents.Selected, newSession);
+				this.comms.Event(CharacterEvents.Selected).ToServer().Emit(newSession);
 			}
 		}
 
-		public void Load(IRpcEvent e)
+		private void GetCharactersForUser(ICommunicationMessage e)
 		{
+			this.Logger.Info($"GetCharactersForUser(ICommunicationMessage e, Guid userId)");
+			GetCharactersForUser(e, e.User.Id);
+		}
+
+		private void GetCharactersForUser(ICommunicationMessage e, Guid userId)
+		{
+			this.Logger.Info($"GetCharactersForUser(ICommunicationMessage e, Guid userId) - userId: {userId}");
 			using (var context = new StorageContext())
 			{
-				var characters = context.Characters.Where(c => c.Deleted == null && c.UserId == e.User.Id).ToList();
+				var characters = context.Characters.Where(c => c.Deleted == null && c.UserId == userId).ToList();
 
 				e.Reply(characters);
 			}
 		}
 
-		public async void Create(IRpcEvent e, Character character)
+		private async void Create(ICommunicationMessage e, Character character)
 		{
 			// TODO: Validate client sent values
 
@@ -224,6 +234,8 @@ namespace IgiCore.Characters.Server
 
 		public void CreateInventories(Character character)
 		{
+			var itemDefinition = this.inventoryManager.GetItemDefinitions().First();
+
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
 			{
@@ -231,8 +243,18 @@ namespace IgiCore.Characters.Server
 				{
 					var containerToCreate = new Container()
 					{
+						Name = "Backpack",
 						Height = 10,
-						Width = 10
+						Width = 10,
+						Items = new List<Item>()
+						{
+							new Item()
+							{
+								Width = itemDefinition.Width,
+								Height = itemDefinition.Height,
+								ItemDefinitionId = itemDefinition.Id
+							}
+						}
 					};
 
 					var container = this.inventoryManager.CreateContainer(containerToCreate);
@@ -255,7 +277,7 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-		public async void SaveCharacter(IRpcEvent e, Character character)
+		public async void SaveCharacter(ICommunicationMessage e, Character character)
 		{
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())
@@ -280,7 +302,7 @@ namespace IgiCore.Characters.Server
 			}
 		}
 
-		public async void SavePosition(IRpcEvent e, Guid characterGuid, Position position)
+		public async void SavePosition(ICommunicationMessage e, Guid characterGuid, Position position)
 		{
 			using (var context = new StorageContext())
 			using (var transaction = context.Database.BeginTransaction())

@@ -10,6 +10,7 @@ using NFive.SDK.Core.Helpers;
 using NFive.SDK.Core.Models;
 using System;
 using System.Threading.Tasks;
+using NFive.SDK.Core.Extensions;
 using Prop = IgiCore.Characters.Shared.Models.Apparel.Prop;
 
 namespace IgiCore.Characters.Client.Models
